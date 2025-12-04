@@ -1,27 +1,15 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from "@/utils/supabase/server";
 
-import { cookies } from 'next/headers'
+export default async function Home() {
+  const supabase = await createClient();
 
-export default async function Page() {
-
-  const cookieStore = await cookies()
-
-  const supabase = createClient(cookieStore)
-
-  const { data: articles } = await supabase.from('todos').select()
+  const { data: articles } = await supabase.from("todos").select();
 
   return (
-
     <ul>
-
       {articles?.map((article) => (
-
-        <li>{article}</li>
-
+        <li key={article.id}>{article.title}</li>
       ))}
-
     </ul>
-
-  )
-
+  );
 }
