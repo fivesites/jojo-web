@@ -1,17 +1,24 @@
 import { HamburgerMenuIcon, PersonIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import Link from "next/link";
 
 export default function HeaderNav() {
   return (
     <>
       {/* TOP PART OF HEADER */}
-      <header className="relative top-0  p-6 grid grid-cols-2 lg:grid-cols-4 h-[50vh] lg:h-[25vh]">
-        <div className="col-span-2 font-mono leading-tight text-sm pt-8">
-          <h1 className="">JOJO</h1>
-          <h2>
-            studio of vintage couture <br /> st. paulsgatan 44, stockholm
-          </h2>
+      <header className="relative top-0 grid grid-cols-2 lg:grid-cols-6 bg-white">
+        <div className=" absolute z-10 top-0 left-0 flex bg-white w-full    ">
+          <Button variant="ghost" size="sm" className="font-mono text-sm">
+            JOJO
+          </Button>
+          <Button
+            size="sm"
+            className="font-mono font-normal text-xs bg-pink-600 "
+          >
+            <span className="">FOR SALE</span> /{" "}
+            <span className="text-black/60 line-through"> RENT</span>
+          </Button>
         </div>
 
         {/* OPEN/CLOSED SIGN */}
@@ -27,28 +34,26 @@ export default function HeaderNav() {
       </header>
 
       {/* 🍀 STICKY → FIXED NAVBAR */}
-      <div className="fixed top-0 left-0 right-0  flex   rounded-none  ">
-        <div className="hidden lg:block">
-          <Button size="sm" className="font-mono text-xs">
-            Menu
-          </Button>
-        </div>
-        <div className="flex justify-end  w-full ">
-          <Button variant="secondary" size="sm" className="font-mono text-xs">
+      <div className="fixed z-20 top-0  right-0 flex justify-between   rounded-none items-center bg-white ">
+        <span className="flex justify-end ">
+          <Button variant="ghost" size="sm" className="font-mono text-xs ">
             Log In
           </Button>
-          <span className="flex items-center justify-end   ">
-            <Button variant="secondary" size="sm" className="font-mono text-xs">
-              Cart
-            </Button>
-          </span>
-        </div>
-        <div className="block lg:hidden ">
-          <Button size="sm">
+
+          <Button variant="ghost" size="sm" className="font-mono text-xs">
+            Cart
+          </Button>
+
+          <Button variant="ghost" className=" " size="sm">
             <HamburgerMenuIcon />
           </Button>
-        </div>
+        </span>
       </div>
+
+      {/* <div className="z-40 fixed bottom-0 left-0 right-0  flex items-baseline justify-between font-serif-densed  w-full text-sm py-1.5 px-3 text-black ">
+        J<div className="w-2.5 aspect-square rounded-full bg-black" />J
+        <span className="font-serif-wide">O</span>
+      </div> */}
     </>
   );
 }

@@ -4,9 +4,21 @@ import localFont from "next/font/local";
 
 export const gtSans = localFont({
   src: [
-    { path: "./fonts/GT-America-Regular.woff", weight: "400", style: "normal" },
-    { path: "./fonts/GT-America-Medium.woff", weight: "500", style: "normal" },
-    { path: "./fonts/GT-America-Bold.woff", weight: "700", style: "normal" },
+    {
+      path: "./fonts/GTAmerica/GT-America-Regular.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GTAmerica/GT-America-Medium.woff",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GTAmerica/GT-America-Bold.woff",
+      weight: "700",
+      style: "normal",
+    },
   ],
   variable: "--font-gtSans",
   display: "swap",
@@ -16,12 +28,12 @@ export const gtSans = localFont({
 export const gtMono = localFont({
   src: [
     {
-      path: "./fonts/GT-America-Mono-Regular.woff",
+      path: "./fonts/GTAmerica/GT-America-Mono-Regular.woff",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/GT-America-Mono-Medium.woff",
+      path: "./fonts/GTAmerica/GT-America-Mono-Medium.woff",
       weight: "500",
       style: "normal",
     },
@@ -30,10 +42,27 @@ export const gtMono = localFont({
   display: "swap",
 });
 
-// GT America Compressed (display font)
 export const gtCompressed = localFont({
-  src: "./fonts/GT-America-Compressed-Black.woff",
+  src: "./fonts/GTAmerica/GT-America-Compressed-Black.woff",
   variable: "--font-gtCompressed",
+  display: "swap",
+});
+
+export const CLTSerifDensed = localFont({
+  src: "./fonts/CLT/Aujournuit-Densed.woff2",
+  variable: "--font-CLTSerifDensed",
+  display: "swap",
+});
+
+export const CLTSerifRegular = localFont({
+  src: "./fonts/CLT/Aujournuit-Regular.woff2",
+  variable: "--font-CLTSerifRegular",
+  display: "swap",
+});
+
+export const CLTSerifWide = localFont({
+  src: "./fonts/CLT/Aujournuit-Wide.woff2",
+  variable: "--font-CLTSerifWide",
   display: "swap",
 });
 
@@ -50,7 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} antialiased`}
+        className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} antialiased`}
       >
         {children}
       </body>
