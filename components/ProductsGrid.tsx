@@ -5,18 +5,18 @@ import Image from "next/image";
 
 export default function ProductsGrid() {
   return (
-    <div className="p-3">
+    <div className=" p-3">
       {/* FILTER BUTTONS */}
-      <div className=" sticky top-10 grid grid-cols-2 mb-1.5">
+      <div className=" sticky top-1.5 grid grid-cols-2 lg:grid-cols-4 justify-start items-baseline mb-1.5">
         {/* LEFT NAV COL */}
 
-        <div className="flex col-span-1 items-center px-1.5">
+        <div className="col-start-2 flex items-center">
           <Badge variant="default" className=" ">
             FILTER
           </Badge>
         </div>
         {/* RIGHT NAV COL */}
-        <div className="flex col-span-1 items-center px-1.5">
+        <div className="flex  items-center px-1.5">
           <Badge variant="secondary" className=" ">
             Latest Added [x]
           </Badge>
@@ -37,7 +37,7 @@ export default function ProductsGrid() {
             <CardDescription className="">
               <h3 className="font-bold">Short-sleeve shirt [Desigual]</h3>
               <span className="flex w-full justify-between items-baseline font-mono ">
-                400 SEK <h4 className="text-xs text-gray-400">2 availible</h4>
+                400 SEK <h4 className="text-xs text-gray-400">2 available</h4>
               </span>
             </CardDescription>
           </Card>
@@ -94,12 +94,12 @@ export default function ProductsGrid() {
             <CardDescription className="">
               <h3 className="font-bold">Sweater [JW ANDERSON]</h3>
               <span className="flex w-full justify-between items-baseline font-mono font-normal ">
-                400 SEK <h4 className="text-xs text-gray-400">4 availible</h4>
+                400 SEK <h4 className="text-xs text-gray-400">4 available</h4>
               </span>
             </CardDescription>
           </Card>
         </div>
-        {/* PRODUCT GRID */}
+        <div className="h-screen"></div>
       </div>
     </div>
   );

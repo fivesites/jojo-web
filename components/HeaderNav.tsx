@@ -6,10 +6,12 @@ export default function HeaderNav() {
   return (
     <>
       {/* TOP PART OF HEADER */}
-      <header className="relative top-0  px-6 pt-18 grid grid-cols-2 lg:grid-cols-4 h-[50vh]">
-        <div className="col-span-2 font-mono leading-tight text-sm">
-          <strong>JOJO</strong> studio of vintage couture <br /> st. paulsgatan
-          44, stockholm
+      <header className="relative top-0  p-6 grid grid-cols-2 lg:grid-cols-4 h-[50vh] lg:h-[25vh]">
+        <div className="col-span-2 font-mono leading-tight text-sm pt-8">
+          <h1 className="">JOJO</h1>
+          <h2>
+            studio of vintage couture <br /> st. paulsgatan 44, stockholm
+          </h2>
         </div>
 
         {/* OPEN/CLOSED SIGN */}
@@ -25,26 +27,26 @@ export default function HeaderNav() {
       </header>
 
       {/* 🍀 STICKY → FIXED NAVBAR */}
-      <div className="fixed top-0 w-full grid grid-cols-2  bg-gray-200 rounded-none">
-        <div>
-          <Button size="sm">MENU</Button>
-        </div>
-
-        <div className="flex justify-between w-full ">
+      <div className="fixed top-0 left-0 right-0  flex   rounded-none  ">
+        <div className="hidden lg:block">
           <Button size="sm" className="font-mono text-xs">
-            LOG IN
+            Menu
+          </Button>
+        </div>
+        <div className="flex justify-end  w-full ">
+          <Button variant="secondary" size="sm" className="font-mono text-xs">
+            Log In
           </Button>
           <span className="flex items-center justify-end   ">
-            <Button size="sm" className="font-mono text-xs">
+            <Button variant="secondary" size="sm" className="font-mono text-xs">
               Cart
             </Button>
-            <Button size="sm">
-              <PersonIcon />
-            </Button>
-            <Button size="sm">
-              <HamburgerMenuIcon />
-            </Button>
           </span>
+        </div>
+        <div className="block lg:hidden ">
+          <Button size="sm">
+            <HamburgerMenuIcon />
+          </Button>
         </div>
       </div>
     </>
