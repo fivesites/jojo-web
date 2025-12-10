@@ -1,15 +1,14 @@
-import { createClient } from "@/utils/supabase/server";
+import HeaderNav from "@/components/HeaderNav";
+import ProductsGrid from "@/components/ProductsGrid";
 
 export default async function Home() {
-  const supabase = await createClient();
-
-  const { data: articles } = await supabase.from("todos").select();
-
   return (
-    <ul>
-      {articles?.map((article) => (
-        <li key={article.id}>{article.title}</li>
-      ))}
-    </ul>
+    <main className="min-h-screen ">
+      <HeaderNav />
+      <section className="">
+        <ProductsGrid />
+      </section>
+      <section className="h-screen"></section>
+    </main>
   );
 }
