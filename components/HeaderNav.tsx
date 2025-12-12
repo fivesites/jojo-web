@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { useSite } from "@/app/context/SiteContext";
 import { useState } from "react";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import Link from "next/link";
 
 function MenuOverlay({
   setOpen,
@@ -19,21 +19,19 @@ function MenuOverlay({
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 h-full w-full ${
-        currentSite === "sale" ? "bg-pink-600" : "bg-blue-600"
-      } `}
+      className={`fixed top-0 left-0 z-50 h-full w-full flex flex-col lg:flex-row-reverse bg-accent text-accent-foreground `}
     >
       <Button
         onClick={() => setOpen(false)}
-        variant="ghost"
+        variant="default"
         size="sm"
         className="font-mono absolute top-0 right-0"
       >
         <Cross1Icon />
       </Button>
 
-      <div className="h-[50vh] pt-24 px-6">
-        <div className="grid w-full max-w-sm items-center gap-1.5 font-mono font-normal text-xs rounded-none mb-6">
+      <div className="h-[50vh] w-full lg:h-screen lg:w-1/2 pt-12 px-6 flex flex-col">
+        <div className="grid w-full max-w-sm items-center gap-1.5 font-mono font-normal text-xs rounded-none mb-12 px-3">
           <Input
             className=" border-black placeholder:text-black placeholder:text-xs font-mono text-xs rounded-none shadow-none "
             id="text"
@@ -41,10 +39,49 @@ function MenuOverlay({
             placeholder="Search..."
           />
         </div>
+        <nav>
+          <ul className="flex flex-col gap-2 text-sm font-mono">
+            <li>
+              <Link href="/">
+                <Button variant="link" size="sm">
+                  Products
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/">
+                <Button variant="link" size="sm">
+                  Visit The Store
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/pages/about">
+                <Button variant="link" size="sm">
+                  About JOJO
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/">
+                <Button variant="link" size="sm">
+                  Privacy Policy
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/">
+                <Button variant="link" size="sm">
+                  Imprint
+                </Button>
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <div className="h-[50vh] bg-pink-600 pt-12 px-6">
+      <div className="h-[50vh] w-full lg:h-screen lg:w-1/2 bg-accent text-accent-foreground pt-12 px-6">
         <div className="mb-4">
-          <Button variant="link" size="sm" className="font-mono text-xs">
+          <Button variant="link" size="sm" className="">
             Latest Added
           </Button>
         </div>
@@ -54,16 +91,16 @@ function MenuOverlay({
           <Button
             variant="link"
             size="sm"
-            className="font-mono text-xs"
+            className=""
             onClick={() => setGender("man")}
           >
             Man
           </Button>
-          <span className=" font-mono text-xs">/</span>
+          <span className=" font-serif-book text-xs">/</span>
           <Button
             variant="link"
             size="sm"
-            className="font-mono text-xs"
+            className=""
             onClick={() => setGender("woman")}
           >
             Woman
@@ -74,7 +111,7 @@ function MenuOverlay({
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 ">
           {categories.map((category, index) => (
             <div key={index} className="col-span-1  ">
-              <Button variant="link" size="sm" className="font-mono text-xs ">
+              <Button variant="link" size="sm" className="">
                 {gender === "man" ? "Men's" : "Women's"} {category}
               </Button>
             </div>
@@ -96,20 +133,17 @@ export default function HeaderNav() {
         className={`bg-white fixed z-30 top-0 left-0 grid grid-cols-2 lg:grid-cols-6`}
       >
         <div className="flex  w-full    ">
-          <Button variant="ghost" size="sm" className="font-mono text-xs">
-            JOJO STUDIO
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="font-mono font-normal text-xs"
-            onClick={toggleSite}
-          >
-            <span className={`text-foreground`}>
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="">
+              JOJO STUDIO
+            </Button>
+          </Link>
+          <Button variant="ghost" size="sm" className="" onClick={toggleSite}>
+            <span className={` `}>
               {currentSite === "sale" ? "FOR RENT" : "FOR SALE"}
             </span>{" "}
             /{" "}
-            <span className="text-foreground/60 line-through">
+            <span className=" transition-colors line-through opacity-30">
               {" "}
               {currentSite === "sale" ? "SALE" : "RENT"}
             </span>
@@ -133,11 +167,11 @@ export default function HeaderNav() {
         className={`bg-white fixed z-40 top-0  right-0 flex justify-between   rounded-none items-center`}
       >
         <span className="flex justify-end ">
-          <Button variant="ghost" size="sm" className="font-mono text-xs ">
+          <Button variant="ghost" size="sm" className=" ">
             Log In
           </Button>
 
-          <Button variant="ghost" size="sm" className="font-mono text-xs">
+          <Button variant="ghost" size="sm" className="">
             Cart
           </Button>
 

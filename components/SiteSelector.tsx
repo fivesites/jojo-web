@@ -4,20 +4,24 @@ import { useSite } from "@/app/context/SiteContext";
 export default function SiteSelector() {
   const { currentSite, setCurrentSite } = useSite();
   return (
-    <section className=" h-[75vh] lg:h-[25vh] grid grid-cols-2 px-3 mt-8 ">
+    <section className=" h-[50vh] lg:h-[25vh] grid grid-cols-2 mt-8  ">
       <div
-        className={`${
-          currentSite === "sale" ? "bg-pink-600" : "bg-pink-600"
-        } flex flex-col items-center justify-center px-6 text-white font-sans text-base space-y-6 hover:bg-pink-700`}
+        className={`col-span-1 z-0 flex flex-col bg-[url(/flowers.png)] bg-no-repeat bg-fill bg-center`}
       >
-        <Button onClick={() => setCurrentSite("sale")}>FOR SALE</Button>
+        <div className="w-full h-full relative z-10 flex flex-col items-center justify-center ">
+          <Button size="sm" onClick={() => setCurrentSite("sale")}>
+            For Sale
+          </Button>
+        </div>
       </div>
       <div
-        className={`${
-          currentSite === "rent" ? "bg-blue-600" : "bg-blue-600"
-        } flex flex-col items-center justify-center px-6 text-white font-sans text-base space-y-6 hover:bg-blue-700`}
+        className={`col-span-1 z-0 flex flex-col bg-[url(/cicciolina_noise.png)] bg-no-repeat bg-fill bg-center `}
       >
-        <Button onClick={() => setCurrentSite("rent")}>FOR RENT</Button>
+        <div className="w-full h-full relative z-10 flex flex-col items-center justify-center ">
+          <Button size="sm" onClick={() => setCurrentSite("rent")}>
+            For Rent
+          </Button>
+        </div>
       </div>
     </section>
   );

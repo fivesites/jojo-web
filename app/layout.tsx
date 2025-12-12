@@ -68,6 +68,24 @@ export const CLTSerifWide = localFont({
   display: "swap",
 });
 
+export const gtSectraBook = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Book.woff",
+  variable: "--font-gtSectraBook",
+  display: "swap",
+});
+
+export const gtSectraDisplay = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Display-Regular.woff",
+  variable: "--font-gtSectraDisplay",
+  display: "swap",
+});
+
+export const gtSectraDisplayItalic = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Display-Regular-Italic.woff",
+  variable: "--font-gtSectraDisplayItalic",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "JOJO",
   description: "studio of vintage couture",
@@ -81,7 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} antialiased`}
+        className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} ${gtSectraDisplay.variable} ${gtSectraDisplayItalic.variable} ${gtSectraBook.variable} antialiased`}
       >
         <SiteProvider>
           <HeaderNav />

@@ -1,29 +1,20 @@
-import { Book, BookmarkIcon } from "lucide-react";
 import { Card, CardContent, CardDescription } from "../ui/card";
 import Image from "next/image";
-import { BookmarkFilledIcon } from "@radix-ui/react-icons";
-
-interface ProductCardProps {
-  product: {
-    img: string;
-    title: string;
-    price: number;
-  };
-}
-
-export default function ProductCard({ product }: ProductCardProps) {
+import { CreateProductRequest } from "@/types/product";
+export default function ProductCard({
+  product,
+}: {
+  product: CreateProductRequest;
+}) {
   const productPrice = `${product.price} SEK`;
-
-  const isVideo = product.img.includes("aspect-video");
-  const aspectClass = isVideo ? "aspect-video" : "aspect-[3/4]";
 
   return (
     <Card className={`w-full `}>
       <CardContent className="p-0">
-        <div className={`relative w-full ${aspectClass}`}>
+        <div className={`relative w-full `}>
           <Image
-            src={`/${product.img}`}
-            alt={product.title}
+            src={product.img_url || "/placeholder.png"}
+            alt={product.title || "Product image"}
             fill
             className="object-cover object-top"
           />

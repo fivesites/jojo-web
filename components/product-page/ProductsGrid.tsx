@@ -2,11 +2,10 @@
 
 import ProductCard from "./ProductCard";
 
-import { fakeSaleProducts, fakeRentProducts } from "./fakeProducts";
 import { useState } from "react";
 import { Button, type buttonVariants } from "../ui/button";
 import type { VariantProps } from "class-variance-authority";
-import { useSite } from "@/app/context/SiteContext";
+import { CreateProductRequest } from "@/types/product";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
@@ -36,10 +35,11 @@ function ToggleGridColsButton({
   );
 }
 
-export default function ProductsGrid({}: {}) {
-  const { currentSite } = useSite();
-  const products = currentSite === "sale" ? fakeSaleProducts : fakeRentProducts;
-
+export default function ProductsGrid({
+  products,
+}: {
+  products: CreateProductRequest[];
+}) {
   const [layoutIndex, setLayoutIndex] = useState<number>(1);
 
   const layouts = [
