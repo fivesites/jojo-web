@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { SiteProvider } from "./context/SiteContext";
+import HeaderNav from "@/components/HeaderNav";
+import { ThemeProvider } from "next-themes";
+import React from "react";
 import { ProductProvider } from "@/context/ProductContext";
 import HeaderNav from "@/components/HeaderNav";
 import { ThemeProvider } from "next-themes";
@@ -71,6 +74,24 @@ export const CLTSerifWide = localFont({
   display: "swap",
 });
 
+export const gtSectraBook = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Book.woff",
+  variable: "--font-gtSectraBook",
+  display: "swap",
+});
+
+export const gtSectraDisplay = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Display-Regular.woff",
+  variable: "--font-gtSectraDisplay",
+  display: "swap",
+});
+
+export const gtSectraDisplayItalic = localFont({
+  src: "./fonts/GTSectra/GT-Sectra-Display-Regular-Italic.woff",
+  variable: "--font-gtSectraDisplayItalic",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "JOJO",
   description: "studio of vintage couture",
@@ -82,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} ${gtSectraDisplay.variable} ${gtSectraDisplayItalic.variable} ${gtSectraBook.variable} antialiased`}
       >
