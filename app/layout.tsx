@@ -6,9 +6,7 @@ import HeaderNav from "@/components/HeaderNav";
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import { ProductProvider } from "@/context/ProductContext";
-import HeaderNav from "@/components/HeaderNav";
-import { ThemeProvider } from "next-themes";
-import React from "react";
+
 
 export const gtSans = localFont({
   src: [
@@ -107,17 +105,19 @@ export default function RootLayout({
       <body
         className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} ${gtSectraDisplay.variable} ${gtSectraDisplayItalic.variable} ${gtSectraBook.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SiteProvider>
-            <HeaderNav />
-            {children}
-          </SiteProvider>
-        </ThemeProvider>
+        <ProductProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SiteProvider>
+              <HeaderNav />
+              {children}
+            </SiteProvider>
+          </ThemeProvider>
+        </ProductProvider>
       </body>
     </html>
   );
