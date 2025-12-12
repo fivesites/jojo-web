@@ -7,7 +7,6 @@ import { ThemeProvider } from "next-themes";
 import React from "react";
 import { ProductProvider } from "@/context/ProductContext";
 
-
 export const gtSans = localFont({
   src: [
     {
@@ -97,8 +96,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal?: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -115,6 +116,7 @@ export default function RootLayout({
             <SiteProvider>
               <HeaderNav />
               {children}
+              {modal}
             </SiteProvider>
           </ThemeProvider>
         </ProductProvider>

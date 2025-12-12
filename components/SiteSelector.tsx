@@ -4,7 +4,11 @@ import { useSite } from "@/app/context/SiteContext";
 export default function SiteSelector() {
   const { currentSite, setCurrentSite } = useSite();
   return (
-    <section className=" h-[50vh] grid grid-cols-2 mt-8  ">
+    <section
+      className={` ${
+        currentSite === "neutral" ? "h-screen" : "h-[25vh]"
+      } grid grid-cols-2 mt-8  `}
+    >
       <div
         className={`col-span-1 z-0 flex flex-col bg-[url(/flowers.png)] bg-no-repeat bg-fill bg-center`}
       >

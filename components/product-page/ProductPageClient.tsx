@@ -3,17 +3,19 @@
 import { useSite } from "@/app/context/SiteContext";
 import ProductsGrid from "./ProductsGrid";
 import SiteSelector from "../SiteSelector";
-import { CreateProductRequest } from "@/types/product";
 
 export default function ProductPageClient({}: {}) {
   const { currentSite } = useSite();
 
   return (
-    <div className={`min-h-screen bg-background`}>
-      <section className={`${currentSite === "neutral" ? "mt-0" : "mt-8"}`}>
-        {currentSite === "neutral" ? <SiteSelector /> : null}
+    <div className={`min-h-screen bg-background max-w-7xl mx-auto`}>
+      <section
+        className={`${currentSite === "neutral" ? "px-0" : "px-3 "}  mt-8`}
+      >
+        <SiteSelector />
       </section>
-      <ProductsGrid />
+
+      {currentSite === "neutral" ? null : <ProductsGrid />}
     </div>
   );
 }

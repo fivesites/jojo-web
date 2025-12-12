@@ -89,8 +89,10 @@ export default function ProductsGrid({}: {}) {
   return (
     <div>
       {/* FILTER BUTTONS */}
-      <div className={`z-10 sticky left-0 top-8 bg-background`}>
-        <div className="flex justify-between items-start font-mono text-xs gap-3 w-full">
+      <div
+        className={`z-10 sticky left-0 top-8 right-0 bg-background max-w-7xl mx-auto w-full`}
+      >
+        <div className="flex justify-between items-start font-mono text-xs gap-3 w-full px-3">
           <span className="flex items-start font-mono text-xs gap-3">
             <Button size="sm" variant="ghost">
               FILTER

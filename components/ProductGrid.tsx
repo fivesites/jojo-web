@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { optimizeCloudinaryImage } from '@/utils/cloudinary'
-import type { Article } from '@/types/database'
+import Link from "next/link";
+import { optimizeCloudinaryImage } from "@/utils/cloudinary";
+import type { Article } from "@/types/database";
 
 interface ProductGridProps {
-  products: Article[]
+  products: Article[];
 }
 
 export default function ProductGrid({ products }: ProductGridProps) {
@@ -17,11 +17,11 @@ export default function ProductGrid({ products }: ProductGridProps) {
           ? optimizeCloudinaryImage(product.img_url, {
               width: 600,
               height: 800,
-              quality: 'auto',
-              crop: 'fill',
-              gravity: 'auto',
+              quality: "auto",
+              crop: "fill",
+              gravity: "auto",
             })
-          : null
+          : null;
 
         return (
           <Link
@@ -34,7 +34,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
               <div className="aspect-[3/4] bg-gray-100 mb-3 overflow-hidden border border-black">
                 <img
                   src={imageUrl}
-                  alt={product.title || 'Product image'}
+                  alt={product.title || "Product image"}
                   className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                 />
               </div>
@@ -48,7 +48,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             <div className="text-sm space-y-1">
               {/* Title */}
               <div className="font-medium tracking-tight">
-                {product.title || 'Untitled'}
+                {product.title || "Untitled"}
               </div>
 
               {/* Price */}
@@ -74,8 +74,8 @@ export default function ProductGrid({ products }: ProductGridProps) {
               </div>
             </div>
           </Link>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

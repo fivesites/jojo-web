@@ -1,71 +1,64 @@
-import { createClient } from '@/utils/supabase/server'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+
+import AdminHeaderNav from "@/components/AdminHeaderNav";
 
 export default async function AdminDashboard() {
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/login')
+    redirect("/login");
   }
 
   const { data: products } = await supabase
-    .from('article')
-    .select('*')
-    .order('created_at', { ascending: false })
+    .from("article")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  const totalProducts = products?.length || 0
+  const totalProducts = products?.length || 0;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-8 bg-background">
       {/* Header */}
-      <header className="border-b border-black">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl tracking-tight">ADMIN</h1>
-          <form action="/api/auth/signout" method="post">
-            <button
-              type="submit"
-              className="text-sm hover:opacity-50 transition-opacity"
-            >
-              Sign Out
-            </button>
-          </form>
-        </div>
-      </header>
-
+      <AdminHeaderNav />
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl">
+      <div className="max-w-7xl mx-auto ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 max-w-2xl">
           {/* Products Count */}
-          <div className="border border-black p-8">
-            <div className="text-sm mb-2 opacity-60">TOTAL PRODUCTS</div>
-            <div className="text-4xl">{totalProducts}</div>
+          <div className=" bg-accent text-accent-foreground p-6">
+            <h3 className="text-sm font-mono mb-6 ">Total products</h3>
+            <div className=" font-serif-display text-6xl px-3">
+              {totalProducts}
+            </div>
           </div>
 
           {/* Add Product */}
           <Link
             href="/admin/products/add"
-            className="border border-black p-8 hover:bg-black hover:text-white transition-colors group"
+            className="bg-secondary text-secondary-foreground hover:text-secondary hover:bg-secondary-foreground p-6 transition-all"
           >
-            <div className="text-sm mb-2 opacity-60 group-hover:opacity-100">
-              ADD NEW
+            <div className="text-sm font-mono mb-6   group-hover:opacity-100">
+              Add new
             </div>
-            <div className="text-4xl">+</div>
+            <div className="font-serif-display text-6xl px-3">+</div>
           </Link>
 
           {/* View Products */}
           <Link
             href="/admin/products"
-            className="border border-black p-8 hover:bg-black hover:text-white transition-colors"
+            className="bg-popover text-popover-foreground hover:text-popover hover:bg-popover-foreground p-6 transition-all"
           >
-            <div className="text-sm mb-2">VIEW ALL PRODUCTS</div>
+            <div className="text-sm  font-mono ">VIEW ALL PRODUCTS</div>
           </Link>
         </div>
       </div>
     </div>
-  )
+  );
 }
