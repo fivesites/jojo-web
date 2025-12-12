@@ -5,6 +5,10 @@ import { SiteProvider } from "./context/SiteContext";
 import HeaderNav from "@/components/HeaderNav";
 import { ThemeProvider } from "next-themes";
 import React from "react";
+import { ProductProvider } from "@/context/ProductContext";
+import HeaderNav from "@/components/HeaderNav";
+import { ThemeProvider } from "next-themes";
+import React from "react";
 
 export const gtSans = localFont({
   src: [
