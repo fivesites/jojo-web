@@ -186,8 +186,6 @@ export default function HeaderNav() {
         </span>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-20 bg-white h-3"></div>
-
       {open && <MenuOverlay setOpen={setOpen} />}
 
       {/* <div className="z-40 fixed bottom-0 left-0 right-0  flex items-baseline justify-between font-serif-densed  w-full text-sm py-1.5 px-3 text-black ">

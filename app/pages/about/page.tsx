@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div className="mt-8 grid grid-cols-2 gap-x-12 items-start justify-start    ">
+    <div className="mt-8 grid grid-cols-2 gap-x-12 items-start justify-start bg-popover text-popover-foreground  ">
       <div className="col-span-2 lg:col-span-1 flex flex-col px-6 pt-12 pb-24">
         <h1 className="text-2xl lg:text-4xl font-serif-display leading-tight ">
           JOJO Studio —

@@ -9,15 +9,15 @@
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(0.9307 0.2286 123.0902);
-  --popover-foreground: oklch(0.7745 0.2291 146.8078);
+  --popover-foreground: oklch(0.3517 0.0798 157.6096);
   --primary: oklch(0.147 0.004 49.25);
   --primary-foreground: oklch(0.985 0.001 106.423);
   --secondary: oklch(0.97 0.001 106.424);
   --secondary-foreground: oklch(0.147 0.004 49.25);
   --muted: oklch(0.8545 0 0);
   --muted-foreground: oklch(0.4091 0 0);
-  --accent: oklch(0.7541 0.1828 328.5647);
-  --accent-foreground: oklch(0.3717 0.1918 302.3193);
+  --accent: oklch(0.74 0.238 322.16);
+  --accent-foreground: oklch(0.977 0.017 320.058);
   --destructive: oklch(0.6225 0.2552 29.2082);
   --destructive-foreground: oklch(0.9095 0.0467 26.2033);
   --border: oklch(0.2645 0 0);
