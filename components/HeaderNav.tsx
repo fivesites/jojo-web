@@ -6,6 +6,7 @@ import { useSite } from "@/app/context/SiteContext";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import ThemeSwitch from "./ThemeSwitch";
 
 function MenuOverlay({
   setOpen,
@@ -167,6 +168,7 @@ export default function HeaderNav() {
         className={`bg-white fixed z-40 top-0  right-0 flex justify-between   rounded-none items-center`}
       >
         <span className="flex justify-end ">
+          <ThemeSwitch />
           <Button variant="ghost" size="sm" className=" ">
             Log In
           </Button>

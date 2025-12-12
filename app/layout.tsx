@@ -99,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} ${gtSectraDisplay.variable} ${gtSectraDisplayItalic.variable} ${gtSectraBook.variable} antialiased`}
       >
