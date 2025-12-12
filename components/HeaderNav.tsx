@@ -19,7 +19,7 @@ function MenuOverlay({
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 h-full w-full flex flex-col lg:flex-row-reverse bg-accent text-accent-foreground `}
+      className={`fixed top-0 left-0 z-50 h-full w-full flex flex-col lg:flex-row bg-accent text-accent-foreground `}
     >
       <Button
         onClick={() => setOpen(false)}

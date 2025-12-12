@@ -3,6 +3,8 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { SiteProvider } from "./context/SiteContext";
 import HeaderNav from "@/components/HeaderNav";
+import { ThemeProvider } from "next-themes";
+import React from "react";
 
 export const gtSans = localFont({
   src: [
@@ -101,10 +103,17 @@ export default function RootLayout({
       <body
         className={`${gtCompressed.variable} ${gtSans.variable} ${gtMono.variable} ${CLTSerifDensed.variable} ${CLTSerifRegular.variable} ${CLTSerifWide.variable} ${gtSectraDisplay.variable} ${gtSectraDisplayItalic.variable} ${gtSectraBook.variable} antialiased`}
       >
-        <SiteProvider>
-          <HeaderNav />
-          {children}
-        </SiteProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SiteProvider>
+            <HeaderNav />
+            {children}
+          </SiteProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

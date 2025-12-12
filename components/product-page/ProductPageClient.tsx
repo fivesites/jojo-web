@@ -14,8 +14,9 @@ export default function ProductPageClient({
 
   return (
     <div className={`min-h-screen`}>
-      {currentSite === "neutral" ? <SiteSelector /> : null}
-
+      <section className={`${currentSite === "neutral" ? "mt-0" : "mt-8"}`}>
+        {currentSite === "neutral" ? <SiteSelector /> : null}
+      </section>
       <ProductsGrid products={products} />
     </div>
   );
