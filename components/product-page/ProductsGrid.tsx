@@ -79,7 +79,8 @@ export default function ProductsGrid({}: {}) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-sm opacity-60">
-          No products available {currentSite === "sale" ? "for sale" : "for rent"}
+          No products available{" "}
+          {currentSite === "sale" ? "for sale" : "for rent"}
         </div>
       </div>
     );
@@ -88,7 +89,7 @@ export default function ProductsGrid({}: {}) {
   return (
     <div>
       {/* FILTER BUTTONS */}
-      <div className={`z-10 sticky left-0 top-8 bg-white`}>
+      <div className={`z-10 sticky left-0 top-8 bg-background`}>
         <div className="flex justify-between items-start font-mono text-xs gap-3 w-full">
           <span className="flex items-start font-mono text-xs gap-3">
             <Button size="sm" variant="ghost">
@@ -110,14 +111,15 @@ export default function ProductsGrid({}: {}) {
       </div>
 
       <div className="px-3">
-        {/* GRID */}
-        <div className={`grid ${layouts[layoutIndex]} `}>
-          {products.map((product, index) => (
-            <ProductCard product={product} key={index} />
-          ))}
+        {currentSite === "neutral" ? null : (
+          <div className={`grid ${layouts[layoutIndex]} `}>
+            {products.map((product, index) => (
+              <ProductCard product={product} key={index} />
+            ))}
 
-          <div className="h-screen"></div>
-        </div>
+            <div className="h-screen"></div>
+          </div>
+        )}
       </div>
     </div>
   );

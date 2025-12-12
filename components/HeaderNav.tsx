@@ -13,7 +13,6 @@ function MenuOverlay({
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { currentSite } = useSite();
   const [gender, setGender] = useState<"man" | "woman">("woman");
 
   const categories = ["Clothing", "Accessories", "Shoes", "Bags"];
@@ -43,35 +42,35 @@ function MenuOverlay({
         <nav>
           <ul className="flex flex-col gap-2 text-sm font-mono">
             <li>
-              <Link href="/">
+              <Link href="/" onClick={() => setOpen(false)}>
                 <Button variant="link" size="sm">
                   Products
                 </Button>
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="/" onClick={() => setOpen(false)}>
                 <Button variant="link" size="sm">
                   Visit The Store
                 </Button>
               </Link>
             </li>
             <li>
-              <Link href="/pages/about">
+              <Link href="/pages/about" onClick={() => setOpen(false)}>
                 <Button variant="link" size="sm">
                   About JOJO
                 </Button>
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="/" onClick={() => setOpen(false)}>
                 <Button variant="link" size="sm">
                   Privacy Policy
                 </Button>
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="/" onClick={() => setOpen(false)}>
                 <Button variant="link" size="sm">
                   Imprint
                 </Button>
@@ -131,7 +130,7 @@ export default function HeaderNav() {
     <>
       {/* TOP PART OF HEADER */}
       <header
-        className={`bg-white fixed z-30 top-0 left-0 grid grid-cols-2 lg:grid-cols-6`}
+        className={`bg-background fixed z-30 top-0 left-0 grid grid-cols-2 lg:grid-cols-6`}
       >
         <div className="flex  w-full    ">
           <Link href="/">
@@ -165,7 +164,7 @@ export default function HeaderNav() {
 
       {/* 🍀 STICKY → FIXED NAVBAR */}
       <div
-        className={`bg-white fixed z-40 top-0  right-0 flex justify-between   rounded-none items-center`}
+        className={`bg-background fixed z-40 top-0  right-0 flex justify-between   rounded-none items-center`}
       >
         <span className="flex justify-end ">
           <ThemeSwitch />

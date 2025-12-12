@@ -23,9 +23,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <Card className={`w-full `}>
+    <Card className={`w-full bg-background `}>
       <CardContent className="p-0">
-        <div className={`relative w-full ${aspectClass} bg-gray-100`}>
+        <div className={`relative w-full ${aspectClass} `}>
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -41,7 +41,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
       <CardDescription className="py-3 px-1.5 space-y-1.5">
-        <h3 className="font-bold truncate w-2/3">{product.title || "Untitled"}</h3>
+        <h3 className="font-bold truncate w-2/3">
+          {product.title || "Untitled"}
+        </h3>
         <h4 className="flex w-full justify-between items-baseline font-mono ">
           {productPrice}
         </h4>
