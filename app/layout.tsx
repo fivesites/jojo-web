@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { SiteProvider } from "./context/SiteContext";
+import { ProductProvider } from "@/context/ProductContext";
 import HeaderNav from "@/components/HeaderNav";
 import { ThemeProvider } from "next-themes";
 import React from "react";
@@ -67,24 +68,6 @@ export const CLTSerifRegular = localFont({
 export const CLTSerifWide = localFont({
   src: "./fonts/CLT/Aujournuit-Wide.woff2",
   variable: "--font-CLTSerifWide",
-  display: "swap",
-});
-
-export const gtSectraBook = localFont({
-  src: "./fonts/GTSectra/GT-Sectra-Book.woff",
-  variable: "--font-gtSectraBook",
-  display: "swap",
-});
-
-export const gtSectraDisplay = localFont({
-  src: "./fonts/GTSectra/GT-Sectra-Display-Regular.woff",
-  variable: "--font-gtSectraDisplay",
-  display: "swap",
-});
-
-export const gtSectraDisplayItalic = localFont({
-  src: "./fonts/GTSectra/GT-Sectra-Display-Regular-Italic.woff",
-  variable: "--font-gtSectraDisplayItalic",
   display: "swap",
 });
 
