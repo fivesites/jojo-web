@@ -9,11 +9,11 @@ export default function ThemeSwitch() {
     <>
       {theme === "light" ? (
         <Button size="sm" variant="ghost" onClick={() => setTheme("dark")}>
-          <SunIcon />
+          Dark / Light
         </Button>
       ) : (
         <Button size="sm" variant="ghost" onClick={() => setTheme("light")}>
-          <SunIcon />
+          Light / Dark
         </Button>
       )}
     </>

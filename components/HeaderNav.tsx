@@ -17,17 +17,34 @@ function MenuOverlay({
 
   return (
     <div
-      className={`  fixed top-0 left-0 z-50  w-full bg-accent text-accent-foreground `}
+      className={`  fixed top-0 left-0 right-0 z-50  w-full bg-accent text-accent-foreground `}
     >
-      <Button
-        onClick={() => setOpen(false)}
-        variant="default"
-        size="sm"
-        className="font-mono absolute top-0 right-0"
-      >
-        <Cross1Icon />
-      </Button>
-      <div className="max-w-7xl mx-auto h-full w-full flex flex-col lg:flex-row ">
+      <div className="flex justify-between w-full items-center  ">
+        <Link href="/">
+          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight  mt-0.75   ">
+            JOJO STUDIO
+          </h1>
+        </Link>
+
+        <div className="flex justify-end items-center  ">
+          <ThemeSwitch />
+          <Button variant="ghost" size="sm" className=" ">
+            Log In
+          </Button>
+          <Button variant="ghost" size="sm" className=" ">
+            Cart
+          </Button>
+          <Button
+            onClick={() => setOpen(false)}
+            variant="ghost"
+            size="sm"
+            className=""
+          >
+            <Cross1Icon />
+          </Button>
+        </div>
+      </div>
+      <div className=" h-full w-full flex flex-col lg:flex-row ">
         <div className=" h-[50vh] w-full lg:h-screen lg:w-1/2 pt-12 px-6 flex flex-col">
           <div className="grid w-full max-w-sm items-center gap-1.5 font-mono font-normal text-xs rounded-none mb-12 px-3">
             <Input
@@ -115,26 +132,8 @@ export default function HeaderNav() {
     <>
       {/* TOP PART OF HEADER */}
       <header
-        className={`max-w-7xl mx-auto bg-background fixed z-30 top-0 left-0 right-0 flex justify-between w-full`}
+        className={`bg-background fixed z-30 top-0 left-0 right-0   w-full h-8 `}
       >
-        <div className="flex  w-full pl-3    ">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="">
-              JOJO STUDIO
-            </Button>
-          </Link>
-          <Button variant="ghost" size="sm" className="" onClick={toggleSite}>
-            <span className={` `}>
-              {currentSite === "sale" ? "FOR RENT" : "FOR SALE"}
-            </span>{" "}
-            /{" "}
-            <span className=" transition-colors line-through opacity-30">
-              {" "}
-              {currentSite === "sale" ? "SALE" : "RENT"}
-            </span>
-          </Button>
-        </div>
-
         {/* OPEN/CLOSED SIGN */}
 
         {/* <div className="col-span-1 flex flex-col justify-baseline items-end font-mono w-full">
@@ -147,29 +146,42 @@ export default function HeaderNav() {
         </div> */}
 
         {/* 🍀 STICKY → FIXED NAVBAR */}
-        <div
-          className={`bg-background  flex justify-between   rounded-none items-center`}
-        >
-          <span className="flex justify-end pr-3">
-            <ThemeSwitch />
-            <Button variant="ghost" size="sm" className=" ">
-              Log In
-            </Button>
 
+        <span className="flex justify-between items-center w-full ">
+          <Link href="/">
+            <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight  mt-0.75   ">
+              JOJO STUDIO
+            </h1>
+          </Link>
+
+          <div className="flex justify-start">
+            <Button variant="ghost" size="sm" className="" onClick={toggleSite}>
+              <span className={` `}>
+                {currentSite === "sale" ? "FOR RENT" : "FOR SALE"}
+              </span>{" "}
+              /{" "}
+              <span className=" transition-colors line-through opacity-30">
+                {" "}
+                {currentSite === "sale" ? "SALE" : "RENT"}
+              </span>
+            </Button>
+            <span className="hidden lg:block">
+              <ThemeSwitch />
+            </span>
             <Button variant="ghost" size="sm" className="">
               Cart
             </Button>
-
             <Button
               onClick={() => setOpen(!open)}
               variant="ghost"
               className=" "
               size="sm"
             >
-              <HamburgerMenuIcon />
+              MENU
             </Button>
-          </span>
-        </div>
+          </div>
+        </span>
+        <div className="flex  w-full items-baseline     "></div>
       </header>
       {open && <MenuOverlay setOpen={setOpen} />}
 

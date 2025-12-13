@@ -6,6 +6,7 @@ import { Button, type buttonVariants } from "../ui/button";
 import type { VariantProps } from "class-variance-authority";
 import { useSite } from "@/app/context/SiteContext";
 import { useProducts } from "@/context/ProductContext";
+import { AnimatePresence } from "framer-motion";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
@@ -89,9 +90,7 @@ export default function ProductsGrid({}: {}) {
   return (
     <div>
       {/* FILTER BUTTONS */}
-      <div
-        className={`z-10 sticky left-0 top-8 right-0 bg-background max-w-7xl mx-auto w-full`}
-      >
+      <div className={`z-10 sticky left-0 top-8 right-0 bg-background  w-full`}>
         <div className="flex justify-between items-start font-mono text-xs gap-3 w-full px-3">
           <span className="flex items-start font-mono text-xs gap-3">
             <Button size="sm" variant="ghost">
@@ -114,7 +113,7 @@ export default function ProductsGrid({}: {}) {
 
       <div className="px-3">
         {currentSite === "neutral" ? null : (
-          <div className={`grid ${layouts[layoutIndex]} `}>
+          <div className={`grid ${layouts[layoutIndex]} gap-0`}>
             {products.map((product, index) => (
               <ProductCard product={product} key={index} />
             ))}

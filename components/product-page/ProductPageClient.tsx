@@ -8,7 +8,7 @@ export default function ProductPageClient({}: {}) {
   const { currentSite } = useSite();
 
   return (
-    <div className={`min-h-screen bg-background max-w-7xl mx-auto`}>
+    <div className={`min-h-screen bg-background `}>
       <section
         className={`${currentSite === "neutral" ? "px-0" : "px-3 "}  mt-8`}
       >
