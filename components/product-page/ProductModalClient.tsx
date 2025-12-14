@@ -40,28 +40,30 @@ export default function ProductModalClient({ id }: { id: string }) {
       exit={{ opacity: 0, x: 100 }}
       transition={{ duration: 0.3 }}
       onClick={() => router.back()}
-      className="fixed inset-0 z-50 "
+      className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto"
     >
+      {/* Semi-transparent background */}
       <div
-        className="absolute inset-0 mt-8 lg:mt-0  h-screen w-full overflow-hidden bg-background/50"
+        className="absolute inset-0 bg-background/5 w-full"
         onClick={(e) => e.stopPropagation()}
       />
 
-      <div className="relative z-50 ml-0 lg:ml-48 mx-auto mt-8 lg:mt-0  p-6  shadow-xl  bg-background h-auto">
+      {/* Modal content */}
+      <div
+        className="relative z-40 mt-8 lg:mt-16 mx-0 lg:mx-48 p-6 bg-background shadow-xl max-h-[96vh] overflow-y-auto w-full "
+        onClick={(e) => e.stopPropagation()}
+      >
         <Button
           variant="link"
           size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            router.back();
-          }}
+          onClick={() => router.back()}
           className=""
         >
           Close
         </Button>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-x-3 items-start justify-start ">
-          <div className="flex flex-col w-full lg:col-span-1 items-start justify-start font-serif-book pt-12 px-3 text-sm">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-x-3 items-start justify-start">
+          <div className="flex flex-col w-full lg:col-span-1 items-start justify-start font-serif-book pt-4 px-3 text-sm">
             <h1 className="mb-3 lg:mb-6 text-sm lg:text-2xl lg:font-serif-display">
               {product?.title ?? "Untitled"}
             </h1>
@@ -73,13 +75,13 @@ export default function ProductModalClient({ id }: { id: string }) {
             <Button className="w-full">Add to cart</Button>
           </div>
 
-          <div className="relative w-full aspect-3/4 h-auto mt-6">
+          <div className="relative w-full aspect-3/4 h-auto mt-6 px-6">
             {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={product?.title ?? "Product"}
                 fill
-                className="object-cover object-top"
+                className="object-cover object-top w-full"
                 sizes="(max-width: 768px) 100vw, 25vw"
                 priority
               />

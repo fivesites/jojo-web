@@ -3,49 +3,136 @@
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { useSite } from "@/app/context/SiteContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+
+const headerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const headerItemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: -12,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1], // editorial ease
+    },
+  },
+};
+
+const overlayVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1],
+      when: "beforeChildren",
+      staggerChildren: 0.05,
+    },
+  },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
+
+const listVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.25, ease: "easeOut" },
+  },
+};
 
 function MenuOverlay({
+  open,
   setOpen,
 }: {
+  open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const categories = ["Clothing", "Accessories", "Shoes", "Bags"];
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
-    <div
-      className={`  fixed top-0 left-0 right-0 z-50  w-full bg-accent text-accent-foreground `}
+    <motion.div
+      className="fixed top-0 left-0 right-0 z-50 w-full bg-accent h-8 "
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
     >
-      <div className="flex justify-between w-full items-center  ">
+      <motion.div
+        className="flex justify-between w-full items-center "
+        variants={sectionVariants}
+      >
         <Link href="/">
-          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight  mt-0.75   ">
+          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight     ">
             JOJO STUDIO
           </h1>
         </Link>
 
         <div className="flex justify-end items-center  ">
           <ThemeSwitch />
-          <Button variant="ghost" size="sm" className=" ">
+          <Button variant="link" size="sm" className=" ">
             Log In
           </Button>
-          <Button variant="ghost" size="sm" className=" ">
+          <Button variant="link" size="sm" className=" ">
             Cart
           </Button>
           <Button
             onClick={() => setOpen(false)}
-            variant="ghost"
+            variant="link"
             size="sm"
             className=""
           >
-            <Cross1Icon />
+            Close
           </Button>
         </div>
-      </div>
-      <div className=" h-full w-full flex flex-col lg:flex-row ">
-        <div className=" h-[50vh] w-full lg:h-screen lg:w-1/2 pt-12 px-6 flex flex-col">
+      </motion.div>
+      <div className=" h-full w-full flex flex-col lg:flex-row bg-accent">
+        <motion.div
+          className="h-[50vh] w-full lg:h-screen lg:w-1/2 pt-12 px-6 flex flex-col bg-accent"
+          variants={sectionVariants}
+        >
           <div className="grid w-full max-w-sm items-center gap-1.5 font-mono font-normal text-xs rounded-none mb-12 px-3">
             <Input
               className=" border-black placeholder:text-black placeholder:text-xs font-mono text-xs rounded-none shadow-none "
@@ -55,53 +142,33 @@ function MenuOverlay({
             />
           </div>
           <nav>
-            <ul className="flex flex-col gap-2 text-sm font-mono">
-              <li>
-                <Link href="/" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    Products
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link href="/" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    Visit The Store
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link href="/pages/about" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    About JOJO
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link href="/" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    Privacy Policy
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link href="/" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    Imprint
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" onClick={() => setOpen(false)}>
-                  <Button variant="link" size="sm">
-                    Admin
-                  </Button>
-                </Link>
-              </li>
-            </ul>
+            <motion.ul
+              className="flex flex-col gap-2 text-sm font-mono"
+              variants={listVariants}
+            >
+              {[
+                { label: "Products", href: "/" },
+                { label: "Visit The Store", href: "/" },
+                { label: "About JOJO", href: "/pages/about" },
+                { label: "Privacy Policy", href: "/" },
+                { label: "Imprint", href: "/" },
+                { label: "Admin", href: "/admin" },
+              ].map((item) => (
+                <motion.li key={item.label} variants={itemVariants}>
+                  <Link href={item.href} onClick={() => setOpen(false)}>
+                    <Button variant="link" size="sm">
+                      {item.label}
+                    </Button>
+                  </Link>
+                </motion.li>
+              ))}
+            </motion.ul>
           </nav>
-        </div>
-        <div className="h-[50vh] w-full lg:h-screen lg:w-1/2 bg-accent text-accent-foreground pt-12 px-6">
+        </motion.div>
+        <motion.div
+          className="h-[50vh] w-full lg:h-screen lg:w-1/2 bg-accent text-accent-foreground pt-12 px-6"
+          variants={sectionVariants}
+        >
           <div className="mb-4">
             <Button variant="link" size="sm" className="">
               Latest Added
@@ -109,18 +176,21 @@ function MenuOverlay({
           </div>
 
           {/* Categories */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 ">
-            {categories.map((category, index) => (
-              <div key={index} className="col-span-1  ">
-                <Button variant="link" size="sm" className="">
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-4 gap-0"
+            variants={listVariants}
+          >
+            {categories.map((category) => (
+              <motion.div key={category} variants={itemVariants}>
+                <Button variant="link" size="sm">
                   {category}
                 </Button>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -131,22 +201,7 @@ export default function HeaderNav() {
   return (
     <>
       {/* TOP PART OF HEADER */}
-      <header
-        className={`bg-background fixed z-30 top-0 left-0 right-0   w-full h-8 `}
-      >
-        {/* OPEN/CLOSED SIGN */}
-
-        {/* <div className="col-span-1 flex flex-col justify-baseline items-end font-mono w-full">
-          <Badge className="flex items-center space-x-1.5">
-            open
-            <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-            <span className="line-through opacity-30">closed</span>
-          </Badge>
-          <span className="ml-3 hidden lg:flex">mon—sat 10—16</span>
-        </div> */}
-
-        {/* 🍀 STICKY → FIXED NAVBAR */}
-
+      <header className="bg-background fixed z-50 top-0 left-0 right-0 w-full h-8">
         <span className="flex justify-between items-center w-full ">
           <Link href="/">
             <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight  mt-0.75   ">
@@ -154,41 +209,56 @@ export default function HeaderNav() {
             </h1>
           </Link>
 
-          <div className="flex justify-start">
-            <Button variant="ghost" size="sm" className="" onClick={toggleSite}>
-              <span className={` `}>
-                {currentSite === "sale" ? "FOR RENT" : "FOR SALE"}
-              </span>{" "}
-              /{" "}
-              <span className=" transition-colors line-through opacity-30">
-                {" "}
-                {currentSite === "sale" ? "SALE" : "RENT"}
-              </span>
-            </Button>
+          <motion.div
+            variants={headerVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex justify-start"
+          >
+            <motion.div variants={headerItemVariants}>
+              <Button
+                variant="link"
+                size="sm"
+                className=""
+                onClick={toggleSite}
+              >
+                <span className={` `}>
+                  {currentSite === "sale" ? "For Rent" : "For Sale"}
+                </span>{" "}
+                /{" "}
+                <span className=" transition-colors line-through opacity-30">
+                  {" "}
+                  {currentSite === "sale" ? "Sale" : "Rent"}
+                </span>
+              </Button>
+            </motion.div>
             <span className="hidden lg:block">
-              <ThemeSwitch />
+              <motion.div variants={headerItemVariants}>
+                <ThemeSwitch />
+              </motion.div>
             </span>
-            <Button variant="ghost" size="sm" className="">
-              Cart
-            </Button>
-            <Button
-              onClick={() => setOpen(!open)}
-              variant="ghost"
-              className=" "
-              size="sm"
-            >
-              MENU
-            </Button>
-          </div>
-        </span>
-        <div className="flex  w-full items-baseline     "></div>
-      </header>
-      {open && <MenuOverlay setOpen={setOpen} />}
+            <motion.div variants={headerItemVariants}>
+              <Button variant="link" size="sm" className="">
+                Cart
+              </Button>
+            </motion.div>
 
-      {/* <div className="z-40 fixed bottom-0 left-0 right-0  flex items-baseline justify-between font-serif-densed  w-full text-sm py-1.5 px-3 text-black ">
-        J<div className="w-2.5 aspect-square rounded-full bg-black" />J
-        <span className="font-serif-wide">O</span>
-      </div> */}
+            <motion.div variants={headerItemVariants}>
+              <Button
+                onClick={() => setOpen(!open)}
+                variant="link"
+                className=" "
+                size="sm"
+              >
+                MENU
+              </Button>
+            </motion.div>
+          </motion.div>
+        </span>
+      </header>
+      <AnimatePresence>
+        {open && <MenuOverlay open={open} setOpen={setOpen} />}
+      </AnimatePresence>
     </>
   );
 }

@@ -1,20 +1,41 @@
 "use client";
 
 import ProductCard from "./ProductCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, type buttonVariants } from "../ui/button";
 import type { VariantProps } from "class-variance-authority";
 import { useSite } from "@/app/context/SiteContext";
 import { useProducts } from "@/context/ProductContext";
-import { AnimatePresence } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+
+import LoaderGIF from "../LoaderGIF";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
 
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1, // shorter delay between each card
+      delayChildren: 0.2, // initial delay before first card
+    },
+  },
+};
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 20 }, // slide in from left + fade
+  visible: {
+    opacity: 1,
+
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 function ToggleGridColsButton({
   buttonText,
   size = "sm",
-  variant = "ghost",
+  variant = "link",
   layouts,
   setLayoutIndex,
 }: {
@@ -49,7 +70,7 @@ export default function ProductsGrid({}: {}) {
     }
   });
 
-  const [layoutIndex, setLayoutIndex] = useState<number>(1);
+  const [layoutIndex, setLayoutIndex] = useState<number>(2);
 
   const layouts = [
     "grid-cols-4 lg:grid-cols-8 grid-rows-auto",
@@ -57,13 +78,8 @@ export default function ProductsGrid({}: {}) {
     "grid-cols-1 lg:grid-cols-4 grid-rows-auto",
   ];
 
-  // Loading state
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-sm opacity-60">Loading products...</div>
-      </div>
-    );
+    return <LoaderGIF />;
   }
 
   // Error state
@@ -88,16 +104,15 @@ export default function ProductsGrid({}: {}) {
   }
 
   return (
-    <div>
-      {/* FILTER BUTTONS */}
-      <div className={`z-10 sticky left-0 top-8 right-0 bg-background  w-full`}>
+    <div className="relative">
+      <div className="sticky  top-16 z-40 bg-background  shadow w-full">
         <div className="flex justify-between items-start font-mono text-xs gap-3 w-full px-3">
           <span className="flex items-start font-mono text-xs gap-3">
-            <Button size="sm" variant="ghost">
+            <Button size="sm" variant="link">
               FILTER
             </Button>
-            <Button size="sm" variant="ghost">
-              Latest Added [x]
+            <Button size="sm" variant="link">
+              Latest Added <span>[x]</span>
             </Button>
           </span>
           <ToggleGridColsButton
@@ -105,23 +120,31 @@ export default function ProductsGrid({}: {}) {
             layoutIndex={layoutIndex}
             setLayoutIndex={setLayoutIndex}
             buttonText="[+/-]"
-            variant="ghost"
+            variant="link"
             size="sm"
           />
         </div>
       </div>
 
-      <div className="px-3">
-        {currentSite === "neutral" ? null : (
-          <div className={`grid ${layouts[layoutIndex]} gap-0`}>
-            {products.map((product, index) => (
-              <ProductCard product={product} key={index} />
-            ))}
+      <motion.div
+        key={`${currentSite}-${layoutIndex}`}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className={`grid ${layouts[layoutIndex]} gap-3 relative px-3 mt-16`}
+      >
+        {products.map((product, index) => (
+          <motion.div
+            className="relative z-10 "
+            key={product.id}
+            variants={cardVariants}
+          >
+            <ProductCard product={product} />
+          </motion.div>
+        ))}
 
-            <div className="h-screen"></div>
-          </div>
-        )}
-      </div>
+        <div className="absolute left-1/2 top-0 h-full w-px bg-foreground transform -translate-x-1/2 z-0" />
+      </motion.div>
     </div>
   );
 }

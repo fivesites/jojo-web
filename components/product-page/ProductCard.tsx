@@ -24,8 +24,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <Link href={`/product/${product.id}`} scroll={false}>
-      <Card className={`w-full bg-background `}>
+    <Link className="" href={`/product/${product.id}`} scroll={false}>
+      <Card className={`w-full bg-background   `}>
         <CardContent className="p-0">
           <div className={`relative w-full  ${aspectClass} `}>
             {imageUrl ? (
@@ -33,7 +33,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 src={imageUrl}
                 alt={product.title || "Product"}
                 fill
-                className="object-cover object-top "
+                className="object-cover object-top   "
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-sm opacity-40">
@@ -43,10 +43,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </CardContent>
         <CardDescription className="py-3 px-1.5 space-y-1.5">
-          <h3 className="font-bold truncate w-2/3">
+          <h3 className="font-serif-display text-sm truncate w-2/3">
             {product.title || "Untitled"}
           </h3>
-          <h4 className="flex w-full justify-between items-baseline font-mono ">
+          <h4 className="flex w-full justify-between items-baseline font-mono text-xs ">
             {productPrice}
           </h4>
         </CardDescription>
