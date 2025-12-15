@@ -2,8 +2,11 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import type { Product } from "@/types/product";
 
 import AdminHeaderNav from "@/components/AdminHeaderNav";
+import AdminProductGrid from "@/components/AdminProductGrid";
+import ProductForm from "@/components/ProductForm";
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -14,50 +17,36 @@ export default async function AdminDashboard() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/");
   }
 
+  // Fetch products with joined category, tag, and size data
   const { data: products } = await supabase
     .from("article")
-    .select("*")
+    .select(
+      `
+      *,
+      category:categories!fk_article_category(id, name, slug, parent_id),
+      tag:tags!fk_article_tag(id, name, slug),
+      size:sizes!fk_article_size(id, name, slug)
+    `
+    )
     .order("created_at", { ascending: false });
 
   const totalProducts = products?.length || 0;
-
   return (
-    <div className="min-h-screen mt-8 bg-background">
+    <div className="min-h-screen  bg-background">
       {/* Header */}
       <AdminHeaderNav />
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 max-w-2xl">
-          {/* Products Count */}
-          <div className=" bg-accent text-accent-foreground p-6">
-            <h3 className="text-sm font-mono mb-6 ">Total products</h3>
-            <div className=" font-serif-display text-6xl px-3">
-              {totalProducts}
-            </div>
-          </div>
+      <div className="mt-[10vh] ] px-3 py-9 w-full flex-col space-y-6">
+        <span className="flex text-2xl font-serif-display gap-x-3">
+          <h3 className="  ">Total Products</h3>[{totalProducts}]
+        </span>
 
-          {/* Add Product */}
-          <Link
-            href="/admin/products/add"
-            className="bg-secondary text-secondary-foreground hover:text-secondary hover:bg-secondary-foreground p-6 transition-all"
-          >
-            <div className="text-sm font-mono mb-6   group-hover:opacity-100">
-              Add new
-            </div>
-            <div className="font-serif-display text-6xl px-3">+</div>
-          </Link>
-
-          {/* View Products */}
-          <Link
-            href="/admin/products"
-            className="bg-popover text-popover-foreground hover:text-popover hover:bg-popover-foreground p-6 transition-all"
-          >
-            <div className="text-sm  font-mono ">VIEW ALL PRODUCTS</div>
-          </Link>
-        </div>
+        {!products || products.length === 0 ? null : (
+          <AdminProductGrid products={products} />
+        )}
       </div>
     </div>
   );

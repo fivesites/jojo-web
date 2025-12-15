@@ -7,6 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { useSite } from "@/app/context/SiteContext";
 import { useProducts } from "@/context/ProductContext";
 import { motion, type Variants } from "framer-motion";
+import Link from "next/link";
 
 import LoaderGIF from "../LoaderGIF";
 
@@ -139,7 +140,9 @@ export default function ProductsGrid({}: {}) {
             key={product.id}
             variants={cardVariants}
           >
-            <ProductCard product={product} />
+            <Link className="" href={`/product/${product.id}`} scroll={false}>
+              <ProductCard product={product} />
+            </Link>
           </motion.div>
         ))}
 

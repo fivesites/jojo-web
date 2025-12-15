@@ -43,7 +43,7 @@ export default function HeaderNav() {
   return (
     <>
       {/* TOP PART OF HEADER */}
-      <header className="bg-background fixed z-30 top-0 left-0 right-0 w-full h-8">
+      <header className="bg-background fixed z-40 top-0 left-0 right-0 w-full h-8">
         <span className="flex justify-between items-center w-full ">
           <Link href="/">
             <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-3 leading-tight    ">

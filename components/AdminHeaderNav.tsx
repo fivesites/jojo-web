@@ -3,13 +3,21 @@ import Link from "next/link";
 
 export default function AdminHeaderNav() {
   return (
-    <header className=" bg-background">
-      <div className="max-w-7xl mx-auto  flex items-center justify-between px-3">
-        <Link href="/admin" className="">
-          <Button variant="ghost" size="sm">
-            ADMIN
+    <header className="fixed top-6 left-0 right-0 z-50 bg-background">
+      <div className=" flex items-center justify-between">
+        <span className="text-xs font-serif-book">
+          <Button asChild variant="link" size="sm">
+            <Link href="/" className="">
+              Home
+            </Link>
           </Button>
-        </Link>
+          /
+          <Button asChild variant="link" size="sm">
+            <Link href="/admin" className="">
+              Admin Panel{" "}
+            </Link>
+          </Button>
+        </span>
 
         <div className="flex items-center justify-end">
           <Button variant="ghost" size="sm">

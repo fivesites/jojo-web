@@ -1,7 +1,7 @@
 "use client";
 
 import { useProducts } from "@/context/ProductContext";
-import ProductGrid from "./ProductGrid";
+import ProductGrid from "./AdminProductGrid";
 
 export default function ProductPageClient() {
   const { products, loading, error } = useProducts();
