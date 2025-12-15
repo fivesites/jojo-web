@@ -12,14 +12,6 @@ export default function LoaderGIF() {
         alt="loading"
         className="object-cover w-full lg:max-w-2xl mx-auto aspect-video "
       />
-      <div className={`flex justify-center items-end w-full `}>
-        <div
-          className="
-         font-serif-display font-normal  text-xl  text-center    w-full p-3 "
-        >
-          {currentSite === "sale" ? "For Rent" : "For Sale"}
-        </div>
-      </div>
     </div>
   );
 }

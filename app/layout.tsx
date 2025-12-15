@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { SiteProvider } from "./context/SiteContext";
 import HeaderNav from "@/components/HeaderNav";
+
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import { ProductProvider } from "@/context/ProductContext";
@@ -115,6 +116,7 @@ export default function RootLayout({
           >
             <SiteProvider>
               <HeaderNav />
+
               {children}
               {modal}
             </SiteProvider>
