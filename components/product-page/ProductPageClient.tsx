@@ -24,9 +24,11 @@ export default function ProductPageClient({}: {}) {
   }, [currentSite]);
 
   return (
-    <div className={`min-h-screen bg-background overflow-hidden `}>
+    <div className={`min-h-screen bg-background overflow-hidden  `}>
       <section
-        className={`${currentSite === "neutral" ? "px-0 block " : "hidden "}  `}
+        className={`${
+          currentSite === "neutral" ? "px-0 block   h-screen" : "hidden "
+        }  `}
       >
         <SiteSelector />
       </section>

@@ -109,7 +109,7 @@
   --shadow-y: 1px;
   --shadow-blur: 3px;
   --shadow-spread: 0px;
-  --shadow-opacity: 0;
+  --shadow-opacity: 1;
   --shadow-color: oklch(0 0 0);
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0);

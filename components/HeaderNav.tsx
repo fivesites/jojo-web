@@ -94,7 +94,7 @@ function MenuOverlay({
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 z-50 w-full bg-accent h-8 "
+      className="fixed top-0 left-0 right-0 z-50 w-sm bg-accent shadow-2xl  "
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
@@ -105,7 +105,7 @@ function MenuOverlay({
         variants={sectionVariants}
       >
         <Link href="/">
-          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight     ">
+          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-3 leading-tight     ">
             JOJO STUDIO
           </h1>
         </Link>
@@ -128,22 +128,24 @@ function MenuOverlay({
           </Button>
         </div>
       </motion.div>
-      <div className=" h-full w-full flex flex-col lg:flex-row bg-accent">
+
+      {/* HEADER CONTENT */}
+      <div className=" mt-[10vh] lg:mt-[20vh] h-full w-full flex flex-col lg:flex-row bg-accent">
         <motion.div
-          className="h-[50vh] w-full lg:h-screen lg:w-1/2 pt-12 px-6 flex flex-col bg-accent"
+          className="h-auto w-full  lg:w-1/2 py-9  px-3   flex flex-col  space-y-6"
           variants={sectionVariants}
         >
-          <div className="grid w-full max-w-sm items-center gap-1.5 font-mono font-normal text-xs rounded-none mb-12 px-3">
+          <div className="grid w-full  items-center   text-xs  px-3">
             <Input
-              className=" border-black placeholder:text-black placeholder:text-xs font-mono text-xs rounded-none shadow-none "
+              className=" border-black placeholder:text-black placeholder:text-xs max-w-sm  text-xs rounded-none shadow-none "
               id="text"
               type="text"
-              placeholder="Search..."
+              placeholder="Search JOJO STUDIO..."
             />
           </div>
           <nav>
             <motion.ul
-              className="flex flex-col gap-2 text-sm font-mono"
+              className="flex flex-col  text-sm font-mono"
               variants={listVariants}
             >
               {[
@@ -166,10 +168,10 @@ function MenuOverlay({
           </nav>
         </motion.div>
         <motion.div
-          className="h-[50vh] w-full lg:h-screen lg:w-1/2 bg-accent text-accent-foreground pt-12 px-6"
+          className=" w-full h-full lg:h-screen lg:w-1/2 bg-accent text-accent-foreground flex flex-col px-3 py-9 space-y-6"
           variants={sectionVariants}
         >
-          <div className="mb-4">
+          <div className="">
             <Button variant="link" size="sm" className="">
               Latest Added
             </Button>
@@ -204,7 +206,7 @@ export default function HeaderNav() {
       <header className="bg-background fixed z-50 top-0 left-0 right-0 w-full h-8">
         <span className="flex justify-between items-center w-full ">
           <Link href="/">
-            <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-4 leading-tight  mt-0.75   ">
+            <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-3 leading-tight  mt-0.75   ">
               JOJO STUDIO
             </h1>
           </Link>

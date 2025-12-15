@@ -104,8 +104,8 @@ export default function ProductsGrid({}: {}) {
   }
 
   return (
-    <div className="relative">
-      <div className="sticky  top-16 z-40 bg-background  shadow w-full">
+    <div className="relative  ">
+      <div className="sticky  top-[10vh] lg:top-[20vh] z-40 bg-background  shadow w-full">
         <div className="flex justify-between items-start font-mono text-xs gap-3 w-full px-3">
           <span className="flex items-start font-mono text-xs gap-3">
             <Button size="sm" variant="link">
@@ -131,7 +131,7 @@ export default function ProductsGrid({}: {}) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className={`grid ${layouts[layoutIndex]} gap-3 relative px-3 mt-16`}
+        className={` grid  ${layouts[layoutIndex]} gap-3 relative px-3 mt-[10vh] lg:mt-[20vh]`}
       >
         {products.map((product, index) => (
           <motion.div
