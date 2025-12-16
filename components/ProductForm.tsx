@@ -24,13 +24,17 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 interface ProductFormProps {
   mode: "create" | "edit";
   initialProduct?: Article;
+  toggleForm: () => void;
 }
 
 export default function ProductForm({
+  toggleForm,
   mode,
   initialProduct,
 }: ProductFormProps) {
@@ -374,7 +378,7 @@ export default function ProductForm({
           }
         }
 
-        router.push("/admin/products");
+        router.push("/admin");
       } else {
         // Update existing product
         productId = initialProduct!.id!;
@@ -441,19 +445,23 @@ export default function ProductForm({
 
   return (
     <form
-      className="absolute top-0 left-0 z-30 bg-background w-full h-full"
+      className="absolute top-[10vh] lg:top-[20vh] left-0 z-30 bg-accent w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 p-3 max-w-4xl  "
       onSubmit={handleSubmit}
     >
+      <h1 className="col-start-1 font-serif-book text-sm ">Add Product</h1>
+
       {error && (
         <div className="mb-6 border border-red-600 px-4 py-3 text-red-600">
           {error}
         </div>
       )}
 
-      <div className="mt-[20vh] grid grid-cols-1 lg:grid-cols-4 gap-12 px-3 bg-background">
+      <div className="col-start-1 col-span-1  lg:col-start-1 lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6 py-9   ">
         {/* Photo Section */}
-        <h1 className="col-start-1 font-serif-display text-2xl">Add Product</h1>
-        <div className="col-start-1 col-span-2">
+        <div className="col-start-1 col-span-1">
+          <h3 className="text-sm font-serif-book mb-3">
+            Add media (images/video)
+          </h3>
           <ImageUploadMultiple
             onImagesChange={setImageFiles}
             onOrderChange={setOrderedImageUrls}
@@ -463,8 +471,9 @@ export default function ProductForm({
         </div>
 
         {/* Form Section */}
-        <div className="col-start-1 lg:col-start-3 col-span-1 lg:col-span-2 space-y-3  w-full">
-          <div>
+        <div className="col-start-1 lg:col-start-2 col-span-1  flex flex-col space-y-6  w-full">
+          <h3 className=" font-serif-book text-sm">Product Details</h3>
+          <div className="">
             <Label className=" ">Title</Label>
             <Input
               type="text"
@@ -483,13 +492,13 @@ export default function ProductForm({
               value={formData.description}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-3 border border-black focus:outline-none resize-none"
+              className="w-full"
               placeholder="About the article..."
             />
           </div>
 
           <div>
-            <Label className="">PRICE (SEK)</Label>
+            <Label className="">Price (SEK)</Label>
             <Input
               type="number"
               name="price"
@@ -498,13 +507,13 @@ export default function ProductForm({
               pattern="[0-9]*"
               value={formData.price}
               onChange={handleChange}
-              className=""
+              className="w-full"
               placeholder="299"
             />
           </div>
 
-          <div>
-            <Label>GENDER</Label>
+          <div className="w-full">
+            <Label>Gender</Label>
 
             <Select value={selectedGender} onValueChange={handleGenderChange}>
               <SelectTrigger>
@@ -513,9 +522,7 @@ export default function ProductForm({
 
               <SelectContent>
                 {genders.map((gender) => (
-                  <SelectItem
-                    value={gender.id.toString()} // ✅ REQUIRED
-                  >
+                  <SelectItem key={gender.id} value={gender.id.toString()}>
                     {gender.name}
                   </SelectItem>
                 ))}
@@ -524,25 +531,39 @@ export default function ProductForm({
           </div>
 
           <div>
-            <label className="block text-sm mb-2 opacity-60">CATEGORY</label>
-            <select
-              name="category_id"
+            <Label>Category</Label>
+
+            <Select
               value={formData.category_id}
-              onChange={handleCategoryChange}
+              onValueChange={(value) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  category_id: value,
+                }));
+
+                const category = categories.find(
+                  (cat) => cat.id.toString() === value
+                );
+                setSelectedCategoryName(category?.name || null);
+              }}
               disabled={!selectedGender}
-              className="w-full px-4 py-3 border border-black focus:outline-none bg-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <option value="">Select category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
-            <Label className="">TAG</Label>
+            <Label className="">Tag</Label>
             <TagSelect
               tags={tags}
               selectedTagId={formData.tag_id}
@@ -553,7 +574,7 @@ export default function ProductForm({
             />
           </div>
           <div>
-            <Label className="block text-sm mb-2 opacity-60">SIZE</Label>
+            <Label>Size</Label>
 
             <Select
               value={formData.size_id}
@@ -561,13 +582,13 @@ export default function ProductForm({
                 setFormData((prev) => ({ ...prev, size_id: value }))
               }
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger>
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
 
               <SelectContent>
                 {sizes.map((size) => (
-                  <SelectItem key={size.id} value={size.id}>
+                  <SelectItem key={size.id} value={size.id.toString()}>
                     {size.name}
                   </SelectItem>
                 ))}
@@ -575,51 +596,42 @@ export default function ProductForm({
             </Select>
           </div>
 
-          <div className="space-y-4 pt-2">
-            {/* In Stock Checkbox */}
-            <Label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                name="in_stock"
-                checked={formData.in_stock}
-                onChange={handleChange}
-                className="w-4 h-4 border border-black"
-              />
-              <span className="text-sm">IN STOCK</span>
-            </Label>
-
-            {/* Listing Type: Sale or Rent */}
+          <div className=" grid grid-cols-2 items-start justify-star mt-6">
             <div>
-              <Label className="block text-sm mb-3 opacity-60">
-                LISTING TYPE
-              </Label>
-              <div className="space-y-2">
+              <RadioGroup
+                value={formData.for_sale ? "sale" : "rent"}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    for_sale: value === "sale",
+                  }))
+                }
+                className=""
+              >
                 <Label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="for_sale"
-                    checked={formData.for_sale === true}
-                    onChange={() =>
-                      setFormData((prev) => ({ ...prev, for_sale: true }))
-                    }
-                    className="w-4 h-4 border border-black"
-                  />
-                  <span className="text-sm">Till salu (For Sale)</span>
+                  <RadioGroupItem value="sale" />
+                  <span className="">Till salu (For Sale)</span>
                 </Label>
+
                 <Label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="for_sale"
-                    checked={formData.for_sale === false}
-                    onChange={() =>
-                      setFormData((prev) => ({ ...prev, for_sale: false }))
-                    }
-                    className="w-4 h-4 border border-black"
-                  />
-                  <span className="text-sm">Uthyrning (For Rent)</span>
+                  <RadioGroupItem value="rent" />
+                  <span className="">Uthyrning (For Rent)</span>
                 </Label>
-              </div>
+              </RadioGroup>
             </div>
+            <Label className="flex items-center gap-3 cursor-pointer mb-6">
+              <Checkbox
+                checked={formData.in_stock}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    in_stock: Boolean(checked),
+                  }))
+                }
+              />
+              In Stock
+            </Label>
+            {/* Listing Type: Sale or Rent */}
           </div>
 
           {/* Measurements Section */}
@@ -629,14 +641,14 @@ export default function ProductForm({
             onChange={setMeasurements}
           />
 
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button size="lg" type="submit" disabled={loading} className="w-full">
             {loading
               ? mode === "create"
-                ? "CREATING..."
-                : "SAVING..."
+                ? "Creating..."
+                : "Saving..."
               : mode === "create"
-              ? "CREATE PRODUCT"
-              : "SAVE CHANGES"}
+              ? "Create Product"
+              : "Save Changes"}
           </Button>
         </div>
       </div>

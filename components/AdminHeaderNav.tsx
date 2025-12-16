@@ -20,11 +20,6 @@ export default function AdminHeaderNav() {
         </span>
 
         <div className="flex items-center justify-end">
-          <Button variant="ghost" size="sm">
-            <Link href="/admin/products/add" className="">
-              Add Product
-            </Link>
-          </Button>
           <form action="/api/auth/signout" method="post">
             <Button variant="ghost" size="sm" type="submit" className="">
               Sign Out

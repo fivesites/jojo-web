@@ -134,7 +134,7 @@ export default function ProductsGrid({}: {}) {
         animate="visible"
         className={` grid  ${layouts[layoutIndex]} gap-3 relative px-3 mt-[10vh] lg:mt-[20vh]`}
       >
-        {products.map((product, index) => (
+        {products.map((product) => (
           <motion.div
             className="relative z-10 "
             key={product.id}

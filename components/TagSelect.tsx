@@ -12,6 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardAction,
+  CardTitle,
+} from "./ui/card";
 
 interface TagSelectProps {
   tags: Tag[];
@@ -85,7 +92,7 @@ export default function TagSelect({
     <>
       {/* Tag Select */}
       <Select value={selectedTagId} onValueChange={handleValueChange}>
-        <SelectTrigger className="w-full px-4 py-3 border border-black bg-white">
+        <SelectTrigger className="">
           <SelectValue placeholder="Select tag" />
         </SelectTrigger>
 
@@ -105,30 +112,22 @@ export default function TagSelect({
       {/* Create Tag Modal */}
       {showCreateModal && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          className="absolute z-10 mt-3 max-w-lg w-full   "
           onClick={handleCloseModal}
         >
-          <div
-            className="bg-white border-2 border-black max-w-md w-full"
+          <Card
+            className="bg-background    font-serif-book text-sm py-9 px-3 w-full h-full flex flex-col space-y-3"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="border-b border-black px-6 py-4 flex justify-between">
-              <h2 className="text-lg tracking-tight">Skapa ny tagg</h2>
-              <Button onClick={handleCloseModal} className="">
-                ✕
-              </Button>
-            </div>
+            <CardHeader className="  ">
+              <CardTitle className="mb-3">Create new tag</CardTitle>
+            </CardHeader>
 
             {/* Content */}
-            <div className="px-6 py-6">
-              {error && (
-                <div className="mb-4 border border-red-600 px-4 py-3 text-red-600 text-sm">
-                  {error}
-                </div>
-              )}
+            <CardContent className="">
+              {error && <div className="">{error}</div>}
 
-              <Label className="">TAG NAME</Label>
               <Input
                 type="text"
                 value={newTagName}
@@ -139,26 +138,15 @@ export default function TagSelect({
                     handleCreateTag();
                   }
                 }}
-                className="w-full px-4 py-3 border border-black focus:outline-none"
+                className=""
                 placeholder="Vintage, Y2K, etc."
                 autoFocus
                 disabled={isCreating}
               />
-
-              <p className="text-xs opacity-60 mt-2">
-                Exempel: Vintage, Sommar, Y2K
-              </p>
-            </div>
+            </CardContent>
 
             {/* Actions */}
-            <div className="border-t border-black px-6 py-4 flex gap-3 justify-end">
-              <Button
-                onClick={handleCloseModal}
-                disabled={isCreating}
-                className=""
-              >
-                Avbryt
-              </Button>
+            <CardAction className=" flex flex-col w-full justify-end">
               <Button
                 onClick={handleCreateTag}
                 disabled={isCreating || !newTagName.trim()}
@@ -166,8 +154,16 @@ export default function TagSelect({
               >
                 {isCreating ? "Skapar..." : "Skapa"}
               </Button>
-            </div>
-          </div>
+              <Button
+                variant="secondary"
+                onClick={handleCloseModal}
+                disabled={isCreating}
+                className=""
+              >
+                Avbryt
+              </Button>
+            </CardAction>
+          </Card>
         </div>
       )}
     </>

@@ -37,11 +37,18 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen  bg-background">
       {/* Header */}
-      <AdminHeaderNav />
+
       {/* Main Content */}
-      <div className="mt-[10vh] ] px-3 py-9 w-full flex-col space-y-6">
-        <span className="flex text-2xl font-serif-display gap-x-3">
-          <h3 className="  ">Total Products</h3>[{totalProducts}]
+      <div className="mt-[10vh] lg:mt-[20vh] px-3 py-9 w-full flex-col space-y-3">
+        <span className="flex flex-col  gap-x-3 space-y-1.5 mb-12">
+          <h1 className="text-xl font-serif-display  ">
+            Welcome dear
+            <strong className="ml-1.5 font-normal ">JOJO Studio Admin</strong>!
+          </h1>
+          <p className="font-serif-book max-w-sm">
+            This is the admin page where the magic happens. Here you can add
+            products, edit content and more. <br /> Have fun!
+          </p>
         </span>
 
         {!products || products.length === 0 ? null : (

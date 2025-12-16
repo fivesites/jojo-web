@@ -2,7 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
-import { CameraIcon, FileIcon } from "@radix-ui/react-icons";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CameraIcon,
+  Cross1Icon,
+  FileIcon,
+} from "@radix-ui/react-icons";
+import { Label } from "./ui/label";
+import { Badge } from "./ui/badge";
 
 interface ImageFile {
   id: string;
@@ -376,9 +384,9 @@ export default function ImageUploadMultiple({
       {/* Image Grid */}
       {images.length > 0 && (
         <div>
-          <div className="text-sm mb-2 opacity-60">
+          <Label className="">
             IMAGES ({images.length}/{maxImages})
-          </div>
+          </Label>
           <div className="grid grid-cols-2 gap-3">
             {images.map((image, index) => (
               <div key={image.id} className="relative aspect-3/4] ">
@@ -393,37 +401,37 @@ export default function ImageUploadMultiple({
                   {index > 0 && (
                     <Button
                       onClick={() => moveImage(index, "up")}
-                      className=""
+                      size="icon"
                       title="Move up"
                     >
-                      ↑
+                      <ArrowUpIcon />
                     </Button>
                   )}
                   {index < images.length - 1 && (
                     <Button
                       type="button"
                       onClick={() => moveImage(index, "down")}
-                      className=""
+                      size="icon"
                       title="Move down"
                     >
-                      ↓
+                      <ArrowDownIcon />
                     </Button>
                   )}
                   <Button
                     variant="destructive"
                     onClick={() => removeImage(image.id)}
-                    className=""
+                    size="icon"
                     title="Remove"
                   >
-                    ✕
+                    <Cross1Icon />
                   </Button>
                 </div>
 
                 {/* Primary badge */}
                 {index === 0 && (
-                  <div className="absolute top-2 left-2 px-2 py-1 bg-black text-white text-xs">
+                  <Badge className="absolute top-2 left-2 px-2 py-1 bg-black text-white text-xs">
                     PRIMARY
-                  </div>
+                  </Badge>
                 )}
               </div>
             ))}
@@ -433,7 +441,7 @@ export default function ImageUploadMultiple({
 
       {/* No images state */}
       {images.length === 0 && !isCapturing && (
-        <div className="aspect-3/4 border-2 border-dashed border-gray-300 flex items-center justify-center">
+        <div className="aspect-square  border-2 border-dashed border-gray-300 flex items-center justify-center">
           <div className="text-center opacity-60">
             <p className="text-sm">No images yet</p>
             <p className="text-xs mt-1">Take a photo or upload from device</p>
