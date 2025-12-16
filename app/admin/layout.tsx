@@ -1,6 +1,7 @@
 import React from "react";
 import AdminSidebar from "@/components/AdminSideBar";
 import HeaderNav from "@/components/HeaderNav";
+import { ProductProvider } from "@/context/ProductContext";
 
 export default function AdminLayout({
   children,
@@ -11,10 +12,12 @@ export default function AdminLayout({
 }) {
   return (
     <>
-      <HeaderNav />
-      <AdminSidebar />
-      {children}
-      {modal}
+      <ProductProvider>
+        <HeaderNav />
+        <AdminSidebar />
+        {children}
+        {modal}
+      </ProductProvider>
     </>
   );
 }

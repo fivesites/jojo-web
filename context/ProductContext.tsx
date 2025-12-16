@@ -16,6 +16,7 @@ interface ProductContextType {
   error: string | null;
   refreshProducts: () => Promise<void>;
   filterProducts: (filters: ProductFilters) => Article[];
+  updateProduct: (updated: Article) => Promise<void>;
 }
 
 interface ProductFilters {
@@ -50,12 +51,11 @@ export function ProductProvider({ children }: { children: ReactNode }) {
           tag:tags!fk_article_tag(id, name, slug)
         `
         )
-        .eq("in_stock", true) // Only show in-stock items
+        .eq("in_stock", true)
         .order("created_at", { ascending: false });
 
       if (fetchError) throw fetchError;
 
-      // For each product, get the primary image from product_images table
       const productsWithImages = await Promise.all(
         (data || []).map(async (product) => {
           const { data: images } = await supabase
@@ -65,7 +65,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
             .eq("is_primary", true)
             .single();
 
-          // Use primary image from product_images, fallback to img_url
           return {
             ...product,
             img_url: images?.image_url || product.img_url,
@@ -117,12 +116,49 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  // New: updateProduct
+  const updateProduct = async (updated: Article) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Update in Supabase
+      const { error: updateError } = await supabase
+        .from("article")
+        .update({
+          title: updated.title,
+          description: updated.description,
+          price: updated.price,
+          img_url: updated.img_url,
+          in_stock: updated.in_stock,
+          for_sale: updated.for_sale,
+          category: updated.category?.id,
+          size: updated.size?.id,
+          tag: updated.tag?.id,
+        })
+        .eq("id", updated.id);
+
+      if (updateError) throw updateError;
+
+      // Update locally
+      setProducts((prev) =>
+        prev.map((p) => (p.id === updated.id ? { ...p, ...updated } : p))
+      );
+    } catch (err) {
+      console.error("Failed to update product:", err);
+      setError(err instanceof Error ? err.message : "Failed to update product");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     products,
     loading,
     error,
     refreshProducts,
     filterProducts,
+    updateProduct,
   };
 
   return (
@@ -130,10 +166,10 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook for using product context
+// Custom hook
 export function useProducts() {
   const context = useContext(ProductContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useProducts must be used within a ProductProvider");
   }
   return context;

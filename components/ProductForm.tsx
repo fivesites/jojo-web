@@ -459,7 +459,7 @@ export default function ProductForm({
 
   return (
     <form
-      className="fixed top-14 left-0  lg:top-8 z-20 bg-background border-r border-b w-full  h-screen 
+      className="fixed top-14 left-0  lg:top-8 z-40 bg-background border-r border-b w-full  h-screen 
     overflow-y-auto grid grid-cols-1 lg:grid-cols-2 pl-0 pr-0 pt-3 lg:pl-14 lg:pt-6   pb-3    "
       onSubmit={handleSubmit}
     >

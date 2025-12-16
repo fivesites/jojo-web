@@ -9,7 +9,7 @@ export default async function ProductModal({
 
   return (
     <div className="overflow-hidden">
-      <ProductModalClient id={id} />
+      <ProductModalClient mode="view" id={id} />
     </div>
   );
 }

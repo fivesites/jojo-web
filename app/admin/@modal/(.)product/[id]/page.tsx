@@ -1,10 +1,10 @@
 // app/admin/@modal/(.)product/[id]/page.tsx
-import AdminEditProductModal from "@/components/AdminEditProductModal";
+import ProductModalClient from "@/components/product-page/ProductModalClient";
 
 export default async function AdminProductModal({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  return <AdminEditProductModal params={Promise.resolve({ id })} />;
+  return <ProductModalClient mode="edit" id={id} />;
 }
