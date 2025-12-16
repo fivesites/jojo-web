@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 import AdminProductGrid from "@/components/AdminProductGrid";
 
@@ -36,9 +35,9 @@ export default async function AdminDashboard() {
       {/* Header */}
 
       {/* Main Content */}
-      <div className="mt-[10vh] lg:mt-[20vh] px-3 py-9 w-full flex-col space-y-3">
-        <div className="flex flex-col lg:flex-row">
-          <span className="flex flex-col  gap-x-3 space-y-1.5 mb-12">
+      <div className="mt-[10vh] lg:mt-[20vh] pl-0 lg:pl-14 pt-9 w-full flex-col ">
+        <div className="flex flex-col pl:0 lg:flex-row lg:pl-3">
+          <span className="flex flex-col px-3 py-9  gap-x-3 space-y-1.5 mb-12 ">
             <h1 className="text-xl font-serif-display  ">
               Welcome dear
               <strong className="ml-1.5 font-normal ">JOJO Studio Admin</strong>

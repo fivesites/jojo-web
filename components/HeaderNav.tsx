@@ -9,6 +9,7 @@ import ThemeSwitch from "./ThemeSwitch";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import Login from "./Login";
 import MenuOverlay from "./MenuOverlay";
+import { usePathname } from "next/navigation";
 
 const headerVariants: Variants = {
   hidden: {},
@@ -39,11 +40,22 @@ export default function HeaderNav() {
   const { currentSite, toggleSite } = useSite();
   const [open, setOpen] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
+  const [admin, setAdmin] = useState(false);
+
+  const ifAdmin = usePathname().startsWith("/admin");
+
+  useEffect(() => {
+    setAdmin(ifAdmin);
+  }, [ifAdmin]);
 
   return (
     <>
       {/* TOP PART OF HEADER */}
-      <header className="bg-background fixed z-40 top-0 left-0 right-0 w-full h-8">
+      <header
+        className={` ${
+          admin ? "left-0 lg:left-14 bg-secondary" : "left-0 bg-background"
+        } fixed z-40 top-0  right-0 w-full h-8`}
+      >
         <span className="flex justify-between items-center w-full ">
           <Link href="/">
             <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  px-3 leading-tight    ">

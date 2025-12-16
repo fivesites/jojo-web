@@ -2,34 +2,25 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-
 import ProductForm from "@/components/ProductForm";
 import type { Article } from "@/types/database";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
 import { motion } from "framer-motion";
+
+interface AdminEditProductModalProps {
+  params: { id: string }; // <-- Not a Promise
+}
 
 export default function AdminEditProductModal({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const [productId, setProductId] = useState<string | null>(null);
+}: AdminEditProductModalProps) {
   const [product, setProduct] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const init = async () => {
-      const resolvedParams = await params;
-      setProductId(resolvedParams.id);
-    };
-    init();
-  }, [params]);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!productId) return;
-
     const fetchProduct = async () => {
       const supabase = createClient();
 
@@ -37,13 +28,11 @@ export default function AdminEditProductModal({
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       if (!user) {
-        window.location.href = "/login";
+        router.push("/");
         return;
       }
 
-      // Fetch product
       const { data, error: fetchError } = await supabase
         .from("article")
         .select(
@@ -54,7 +43,7 @@ export default function AdminEditProductModal({
           size:sizes!fk_article_size(id, name, slug)
         `
         )
-        .eq("id", productId)
+        .eq("id", params.id)
         .single();
 
       if (fetchError || !data) {
@@ -68,9 +57,7 @@ export default function AdminEditProductModal({
     };
 
     fetchProduct();
-  }, [productId]);
-
-  const router = useRouter();
+  }, [params.id, router]);
 
   return (
     <motion.div
@@ -78,18 +65,15 @@ export default function AdminEditProductModal({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 100 }}
       transition={{ duration: 0.3 }}
-      onClick={() => router.back()}
-      className="fixed inset-0 z-30 grid grid-cols-12 items-start justify-center overflow-y-auto shadow-2xl min-h-screen w-full"
+      className="fixed top-0 left-0 inset-0 z-30 grid grid-cols-12 items-start justify-center overflow-y-auto shadow-2xl min-h-screen w-full"
     >
-      {/* Semi-transparent background */}
       <div
         className="absolute inset-0 bg-background/50 w-full z-0 pointer-events-none"
         onClick={(e) => e.stopPropagation()}
       />
 
-      {/* Modal content */}
       <div
-        className="col-start-2 col-span-11 relative z-40  mx-0     shadow-xl  overflow-y-auto flex flex-col lg:flex-row items-center justify-center bg-background h-full w-full "
+        className="col-start-2 col-span-11 relative z-40 mx-0 shadow-xl overflow-y-auto flex flex-col lg:flex-row items-center justify-center bg-background h-full w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <ProductForm

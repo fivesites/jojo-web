@@ -159,6 +159,23 @@ export default function ProductForm({
     fetchSubcategories();
   }, [selectedGender]);
 
+  useEffect(() => {
+    if (mode === "edit" && initialProduct) {
+      setFormData({
+        title: initialProduct.title || "",
+        description: initialProduct.description || "",
+        price: initialProduct.price?.toString() || "",
+        category_id: initialProduct.category_id?.toString() || "",
+        tag_id: initialProduct.tag_id?.toString() || "",
+        size_id: initialProduct.size_id?.toString() || "",
+        in_stock: initialProduct.in_stock ?? true,
+        for_sale: initialProduct.for_sale ?? true,
+      });
+
+      setMeasurements(initialProduct.measurements || null);
+    }
+  }, [mode, initialProduct]);
+
   const handleTagCreated = (newTag: Tag) => {
     // Add new tag to the tags list
     setTags((prev) =>
@@ -331,11 +348,8 @@ export default function ProductForm({
 
         productId = newProduct.id;
 
-        // Save images to product_images table
         if (orderedImageUrls.length > 0) {
-          // Build final ordered list: replace blob URLs with uploaded URLs
           const finalOrderedUrls = orderedImageUrls.map((url) => {
-            // If it's a blob URL (new image), find the corresponding uploaded URL
             if (url.startsWith("blob:")) {
               const index = orderedImageUrls
                 .filter((u) => u.startsWith("blob:"))
@@ -445,20 +459,17 @@ export default function ProductForm({
 
   return (
     <form
-      className="fixed top-14 left-0 z-30 bg-accent w-full  h-[calc(100vh-3.5rem)]
-    overflow-y-auto grid grid-cols-1 lg:grid-cols-2 p-3 max-w-4xl   "
+      className="fixed top-14 left-0  lg:top-8 z-20 bg-background border-r border-b w-full  h-screen 
+    overflow-y-auto grid grid-cols-1 lg:grid-cols-2 pl-0 pr-0 pt-3 lg:pl-14 lg:pt-6   pb-3    "
       onSubmit={handleSubmit}
     >
-      <h1 className="col-start-1 font-serif-book text-sm ">Add Product</h1>
+      <div className="col-start-1 col-span-2 flex justify-between items-center w-full ">
+        <h1 className=" font-serif-book text-sm pl-3 pt-3 ">Add Product</h1>
 
-      <Button
-        onClick={toggleForm}
-        size="sm"
-        variant="link"
-        className="absolute top-3 right-3"
-      >
-        Close
-      </Button>
+        <Button onClick={toggleForm} variant="link" className="">
+          Close [x]
+        </Button>
+      </div>
 
       {error && (
         <div className="mb-6 border border-red-600 px-4 py-3 text-red-600">
@@ -466,7 +477,7 @@ export default function ProductForm({
         </div>
       )}
 
-      <div className="col-start-1 col-span-1  lg:col-start-1 lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6 py-9   ">
+      <div className="col-start-1 col-span-1  lg:col-start-1 lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6 py-9 px-3   ">
         {/* Photo Section */}
         <div className="col-start-1 col-span-1">
           <h3 className="text-sm font-serif-book mb-3">

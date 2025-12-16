@@ -60,24 +60,25 @@ export default function ImageUploadMultiple({
       const existingImageFiles: ImageFile[] = existingImages.map(
         (url, index) => ({
           id: `existing-${index}`,
-          file: new File([], "existing", { type: "image/jpeg" }), // Dummy file
+          file: new File([], "existing", { type: "image/jpeg" }),
           preview: url,
           isExisting: true,
           existingUrl: url,
         })
       );
+
       setImages(existingImageFiles);
 
-      // Also notify parent about the initial order
       if (onOrderChange) {
         onOrderChange(existingImages);
       }
-    } else if (existingImages.length === 0 && images.length > 0) {
-      // Only clear if we actually have images to clear
+      return;
+    }
+
+    if (existingImages.length === 0 && images.length > 0) {
       setImages([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [existingImages]);
+  }, [existingImages, images.length, onOrderChange]);
 
   // Set video source when stream is available
   useEffect(() => {

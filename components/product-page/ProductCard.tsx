@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import Image from "next/image";
 import type { Product } from "@/types/product";
 import { optimizeCloudinaryImage } from "@/utils/cloudinary";
-import Link from "next/link";
 import { Badge } from "../ui/badge";
 
 interface ProductCardProps {

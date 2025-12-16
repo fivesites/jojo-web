@@ -1,5 +1,5 @@
 import React from "react";
-import AdminHeaderNav from "@/components/AdminHeaderNav";
+import AdminSidebar from "@/components/AdminSideBar";
 import HeaderNav from "@/components/HeaderNav";
 
 export default function AdminLayout({
@@ -12,7 +12,7 @@ export default function AdminLayout({
   return (
     <>
       <HeaderNav />
-      <AdminHeaderNav />
+      <AdminSidebar />
       {children}
       {modal}
     </>

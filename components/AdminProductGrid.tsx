@@ -53,7 +53,7 @@ function ToggleGridColsButton({
   );
 }
 
-export default function AdminProductClient({ products }: ProductGridProps) {
+export default function AdminProductGrid({ products }: ProductGridProps) {
   const [openForm, setOpenForm] = useState(false);
   const toggleForm = () => setOpenForm(!openForm);
 
@@ -66,10 +66,10 @@ export default function AdminProductClient({ products }: ProductGridProps) {
   ];
 
   return (
-    <div className="relative w-full space-y-3">
+    <div className="relative w-full bg-background">
       {openForm && <ProductForm toggleForm={toggleForm} mode="create" />}
-      <div className="sticky  top-14 left-0 right-0 z-30 bg-background  shadow w-full">
-        <div className="flex justify-between items-start font-serif-book text-xs gap-3 w-full ">
+      <div className="sticky  top-16 lg:top-8 left-0 right-0 z-30  shadow w-full  bg-background">
+        <div className="flex justify-between items-start font-serif-book text-xs  w-full ">
           <span className="flex items-center gap-3 w-1/2">
             <Button
               size="sm"
@@ -99,7 +99,7 @@ export default function AdminProductClient({ products }: ProductGridProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className={` grid  ${layouts[layoutIndex]} gap-3 relative px-3`}
+        className={` grid  ${layouts[layoutIndex]} gap-0 relative`}
       >
         {products.map((product, index) => {
           // Optimize image URL if available
