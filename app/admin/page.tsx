@@ -1,12 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import type { Product } from "@/types/product";
+import { Button } from "@/components/ui/button";
 
-import AdminHeaderNav from "@/components/AdminHeaderNav";
 import AdminProductGrid from "@/components/AdminProductGrid";
-import ProductForm from "@/components/ProductForm";
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -40,16 +37,19 @@ export default async function AdminDashboard() {
 
       {/* Main Content */}
       <div className="mt-[10vh] lg:mt-[20vh] px-3 py-9 w-full flex-col space-y-3">
-        <span className="flex flex-col  gap-x-3 space-y-1.5 mb-12">
-          <h1 className="text-xl font-serif-display  ">
-            Welcome dear
-            <strong className="ml-1.5 font-normal ">JOJO Studio Admin</strong>!
-          </h1>
-          <p className="font-serif-book max-w-sm">
-            This is the admin page where the magic happens. Here you can add
-            products, edit content and more. <br /> Have fun!
-          </p>
-        </span>
+        <div className="flex flex-col lg:flex-row">
+          <span className="flex flex-col  gap-x-3 space-y-1.5 mb-12">
+            <h1 className="text-xl font-serif-display  ">
+              Welcome dear
+              <strong className="ml-1.5 font-normal ">JOJO Studio Admin</strong>
+              !
+            </h1>
+            <p className="font-serif-book max-w-sm">
+              This is the admin page where the magic happens. Here you can add
+              products, edit content and more. <br /> Have fun!
+            </p>
+          </span>
+        </div>
 
         {!products || products.length === 0 ? null : (
           <AdminProductGrid products={products} />

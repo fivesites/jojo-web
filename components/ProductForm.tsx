@@ -445,10 +445,20 @@ export default function ProductForm({
 
   return (
     <form
-      className="absolute top-[10vh] lg:top-[20vh] left-0 z-30 bg-accent w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 p-3 max-w-4xl  "
+      className="fixed top-14 left-0 z-30 bg-accent w-full  h-[calc(100vh-3.5rem)]
+    overflow-y-auto grid grid-cols-1 lg:grid-cols-2 p-3 max-w-4xl   "
       onSubmit={handleSubmit}
     >
       <h1 className="col-start-1 font-serif-book text-sm ">Add Product</h1>
+
+      <Button
+        onClick={toggleForm}
+        size="sm"
+        variant="link"
+        className="absolute top-3 right-3"
+      >
+        Close
+      </Button>
 
       {error && (
         <div className="mb-6 border border-red-600 px-4 py-3 text-red-600">

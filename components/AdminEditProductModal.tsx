@@ -7,6 +7,7 @@ import ProductForm from "@/components/ProductForm";
 import type { Article } from "@/types/database";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { motion } from "framer-motion";
 
 export default function AdminEditProductModal({
   params,
@@ -72,18 +73,31 @@ export default function AdminEditProductModal({
   const router = useRouter();
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 100 }}
+      transition={{ duration: 0.3 }}
+      onClick={() => router.back()}
+      className="fixed inset-0 z-30 grid grid-cols-12 items-start justify-center overflow-y-auto shadow-2xl min-h-screen w-full"
+    >
+      {/* Semi-transparent background */}
+      <div
+        className="absolute inset-0 bg-background/50 w-full z-0 pointer-events-none"
+        onClick={(e) => e.stopPropagation()}
+      />
 
-      <div className="flex items-center gap-6">
-        <Button onClick={() => router.back()}>Close</Button>
+      {/* Modal content */}
+      <div
+        className="col-start-2 col-span-11 relative z-40  mx-0     shadow-xl  overflow-y-auto flex flex-col lg:flex-row items-center justify-center bg-background h-full w-full "
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ProductForm
+          mode="edit"
+          initialProduct={product || undefined}
+          toggleForm={() => router.back()}
+        />
       </div>
-
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <h1 className="text-2xl mb-8 tracking-tight">EDIT PRODUCT</h1>
-        <ProductForm mode="edit" initialProduct={product || undefined} />
-      </div>
-    </div>
+    </motion.div>
   );
 }

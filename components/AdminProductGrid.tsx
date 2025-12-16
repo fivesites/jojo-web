@@ -4,7 +4,7 @@ import Link from "next/link";
 import { optimizeCloudinaryImage } from "@/utils/cloudinary";
 import type { Product } from "@/types/product";
 import ProductCard from "./product-page/ProductCard";
-import { useState } from "react";
+import { useState, type ComponentPropsWithoutRef } from "react";
 import ProductForm from "@/components/ProductForm";
 import { Button, type buttonVariants } from "./ui/button";
 import type { VariantProps } from "class-variance-authority";
@@ -34,17 +34,12 @@ const cardVariants: Variants = {
 };
 
 function ToggleGridColsButton({
-  buttonText,
-  size = "sm",
-  variant = "link",
   layouts,
   setLayoutIndex,
+  buttonText,
 }: {
-  buttonText: string;
-  size?: ButtonSize;
-  variant?: ButtonVariant;
   layouts: string[];
-  layoutIndex: number;
+  buttonText: string;
   setLayoutIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const toggleCols = () => {
@@ -52,7 +47,7 @@ function ToggleGridColsButton({
   };
 
   return (
-    <Button onClick={toggleCols} size={size} variant={variant}>
+    <Button onClick={toggleCols} size="sm" variant="link">
       {buttonText}
     </Button>
   );
@@ -72,25 +67,28 @@ export default function AdminProductClient({ products }: ProductGridProps) {
 
   return (
     <div className="relative w-full space-y-3">
-      {openForm && <ProductForm mode="create" />}
+      {openForm && <ProductForm toggleForm={toggleForm} mode="create" />}
       <div className="sticky  top-14 left-0 right-0 z-30 bg-background  shadow w-full">
         <div className="flex justify-between items-start font-serif-book text-xs gap-3 w-full ">
           <span className="flex items-center gap-3 w-1/2">
-            <Button size="sm" onClick={() => setOpenForm(true)} className="">
+            <Button
+              size="sm"
+              variant="link"
+              onClick={() => setOpenForm(true)}
+              className=""
+            >
               Add Product
             </Button>
-            <h2 className="font-serif-">Total Products [{products.length}]</h2>
           </span>
           <span className="flex items-start justify-between font-mono text-xs gap-3 w-1/2">
-            <Button size="sm">Filter</Button>
+            <Button size="sm" variant="link">
+              Filter
+            </Button>
 
             <ToggleGridColsButton
               layouts={layouts}
-              layoutIndex={layoutIndex}
               setLayoutIndex={setLayoutIndex}
               buttonText="[+/-]"
-              size="sm"
-              variant="default"
             />
           </span>
         </div>
