@@ -451,9 +451,44 @@ export default function ProductForm({
       }
 
       router.refresh();
+      toggleForm();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!initialProduct) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this product? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    try {
+      const supabase = createClient();
+
+      // Delete associated images first
+      await supabase
+        .from("product_images")
+        .delete()
+        .eq("article_id", initialProduct.id);
+
+      // Delete the product
+      const { error } = await supabase
+        .from("article")
+        .delete()
+        .eq("id", initialProduct.id);
+
+      if (error) throw error;
+
+      // Refresh admin page and close modal
+      toggleForm();
+      router.refresh();
+    } catch (err) {
+      console.error("Failed to delete product:", err);
+      alert("Failed to delete product. Please try again.");
     }
   };
 
@@ -671,6 +706,18 @@ export default function ProductForm({
               ? "Create Product"
               : "Save Changes"}
           </Button>
+
+          {mode === "edit" && (
+            <Button
+              size="lg"
+              variant="destructive"
+              type="button"
+              onClick={handleDelete}
+              className="w-full"
+            >
+              Delete Product
+            </Button>
+          )}
         </div>
       </div>
     </form>

@@ -44,7 +44,7 @@ export default function Login({
   };
 
   return (
-    <div className="absolute top-0 right-0 left-auto z-40 h-screen flex flex-col items-start justify-start  px-3 w-full lg:w-1/2 bg-background  ">
+    <div className="fixed inset-0 top-0 right-0 left-auto z-40 h-screen overflow-hidden flex flex-col items-start justify-start  px-3 w-full lg:w-1/2 bg-background  ">
       <Button
         variant="link"
         size="sm"

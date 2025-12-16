@@ -1,10 +1,15 @@
-// app/admin/@modal/(.)product/[id]/page.tsx
 import ProductModalClient from "@/components/product-page/ProductModalClient";
 
-export default async function AdminProductModal({
-  params: { id },
+export default async function ProductModal({
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ProductModalClient mode="edit" id={id} />;
+  const { id } = await params; // <--- await here
+
+  return (
+    <div className="overflow-hidden">
+      <ProductModalClient mode="edit" id={id} />
+    </div>
+  );
 }

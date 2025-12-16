@@ -5,7 +5,7 @@ export default async function ProductModal({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id } = await params; // <--- await here
 
   return (
     <div className="overflow-hidden">

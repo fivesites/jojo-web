@@ -57,7 +57,7 @@ export default function AdminProductGrid({ products }: ProductGridProps) {
   const [openForm, setOpenForm] = useState(false);
   const toggleForm = () => setOpenForm(!openForm);
 
-  const [layoutIndex, setLayoutIndex] = useState<number>(2);
+  const [layoutIndex, setLayoutIndex] = useState<number>(1);
 
   const layouts = [
     "grid-cols-4 lg:grid-cols-8 grid-rows-auto",
@@ -99,7 +99,7 @@ export default function AdminProductGrid({ products }: ProductGridProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className={` grid  ${layouts[layoutIndex]} gap-0 relative`}
+        className={` grid  ${layouts[layoutIndex]} gap-x-1.5 gap-y-1.5 relative`}
       >
         {products.map((product, index) => {
           // Optimize image URL if available
