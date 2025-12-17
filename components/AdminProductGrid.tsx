@@ -58,6 +58,7 @@ export default function AdminProductGrid({ products }: ProductGridProps) {
   const toggleForm = () => setOpenForm(!openForm);
 
   const [layoutIndex, setLayoutIndex] = useState<number>(1);
+  const [showText, setShowText] = useState(false);
 
   const layouts = [
     "grid-cols-4 lg:grid-cols-8 grid-rows-auto",
@@ -105,12 +106,12 @@ export default function AdminProductGrid({ products }: ProductGridProps) {
           // Optimize image URL if available
           const imageUrl = product.img_url
             ? optimizeCloudinaryImage(product.img_url, {
-                width: 600,
-                height: 800,
-                quality: "auto",
-                crop: "fill",
-                gravity: "auto",
-              })
+              width: 600,
+              height: 800,
+              quality: "auto",
+              crop: "fill",
+              gravity: "auto",
+            })
             : null;
 
           return (
@@ -123,8 +124,7 @@ export default function AdminProductGrid({ products }: ProductGridProps) {
                 href={`/admin/product/${product.id}`}
                 className="group cursor-pointer"
               >
-                <ProductCard product={product} />
-              </Link>
+                <ProductCard product={product} showText={showText} setShowText={setShowText} />              </Link>
             </motion.div>
           );
         })}
