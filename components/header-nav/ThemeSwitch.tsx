@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { Badge } from "../ui/badge";
 
 export default function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
@@ -18,13 +19,21 @@ export default function ThemeSwitch() {
   const isDark = theme === "dark";
   return (
     <>
-      <Button
-        size="sm"
-        variant="link"
+      <div
+        role="button"
         onClick={() => setTheme(isDark ? "light" : "dark")}
+        className="space-x-1 "
       >
-        {isDark ? "Dark / Light" : "Light / Dark"}
-      </Button>
+        <Badge variant="ghost" className={` `}>
+          {isDark ? "Dark" : "Light"}
+        </Badge>
+        <Badge
+          variant="ghost"
+          className=" opacity-30  transition-colors line-through "
+        >
+          {isDark ? "Light" : "Dark"}
+        </Badge>
+      </div>
     </>
   );
 }

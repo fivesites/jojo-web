@@ -3,6 +3,7 @@
 import { Button } from "../ui/button";
 import { useSite } from "@/context/SiteContext";
 import { useState, useEffect } from "react";
+import { Badge } from "../ui/badge";
 
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
@@ -54,39 +55,32 @@ export default function HeaderNav() {
       {/* TOP PART OF HEADER */}
       <header
         className={` ${
-          admin ? " pl-3 lg:pl-12 bg-secondary" : "pl-3 bg-background"
-        } fixed z-40 top-0 left-0  right-0 w-full pr-3 pt-1  h-9`}
+          admin ? " pl-3 lg:pl-12 bg-secondary" : "pl-1 bg-background"
+        } fixed z-40 top-0 left-0  right-0 w-full pr-1    h-9`}
       >
-        <span className="flex justify-between items-baseline w-full ">
-          <Link href="/">
-            <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center  leading-tight    ">
-              JOJO STUDIO
-            </h1>
-          </Link>
-
+        <span className="flex justify-between items-center w-full ">
+          <h1 className="text-base px-1   font-serif-display flex items-center justify-center   leading-tight tracking-wide text-primary    ">
+            <Link href="/">JOJO STUDIO</Link>
+          </h1>
           <motion.div
             variants={headerVariants}
             initial="hidden"
             animate="visible"
-            className="flex justify-end 
+            className="flex justify-end space-x-6 
            "
           >
             <motion.div variants={headerItemVariants}>
-              <Button
-                variant="link"
-                size="sm"
-                className=""
-                onClick={toggleSite}
-              >
-                <span className={` `}>
+              <div role="button" className="space-x-0" onClick={toggleSite}>
+                <Badge className={` `}>
                   {currentSite === "sale" ? "For Rent" : "For Sale"}
-                </span>{" "}
-                /{" "}
-                <span className=" transition-colors line-through opacity-30">
-                  {" "}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className=" transition-colors line-through "
+                >
                   {currentSite === "sale" ? "Sale" : "Rent"}
-                </span>
-              </Button>
+                </Badge>
+              </div>
             </motion.div>
             <span className="hidden lg:block">
               <motion.div variants={headerItemVariants}>
@@ -105,9 +99,9 @@ export default function HeaderNav() {
             </motion.div>
 
             <motion.div variants={headerItemVariants}>
-              <Button onClick={() => setOpen(!open)} variant="link" size="sm">
-                Menu
-              </Button>
+              <Badge onClick={() => setOpen(!open)} variant="outline">
+                MENU
+              </Badge>
             </motion.div>
           </motion.div>
         </span>

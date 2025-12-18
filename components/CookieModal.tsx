@@ -11,7 +11,7 @@ export default function CookieModal() {
       exit={{ opacity: 0, y: 24 }}
       className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-end p-1 w-full "
     >
-      <Card className="w-[90vw] max-w-sm bg-accent p-1">
+      <Card className="w-[90vw] max-w-sm bg-accent text-accent-foreground p-1">
         <CardDescription className="font-serif-book pt-6 pb-6 px-6">
           <p className="whitespace-normal wrap-break-word text-sm">
             By continuing to browse this site, you agree to the use of cookies

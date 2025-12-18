@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { useEffect } from "react";
 import ThemeSwitch from "./ThemeSwitch";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0, x: -100 },
@@ -75,32 +76,33 @@ export default function MenuOverlay({
       exit="exit"
     >
       <motion.div
-        className="flex justify-between w-full items-center px-3 pt-1 "
         variants={sectionVariants}
+        className={` absolute 
+            top-0 left-0  right-0 w-full pr-1    h-9`}
       >
-        <Link href="/">
-          <h1 className="text-sm tracking-wider font-serif-display flex items-center justify-center   leading-tight w-full    ">
-            JOJO STUDIO
+        <span className="flex justify-between items-center w-full ">
+          <h1 className="text-base px-1   font-serif-display flex items-center justify-center   leading-tight tracking-wide text-primary    ">
+            <Link href="/">JOJO STUDIO</Link>
           </h1>
-        </Link>
 
-        <div className="flex justify-end items-center w-1/2  ">
-          <ThemeSwitch />
-          <Button variant="link" size="sm" className=" ">
-            Log In
-          </Button>
-          <Button variant="link" size="sm" className=" ">
-            Cart
-          </Button>
-          <Button
-            onClick={() => setOpen(false)}
-            variant="link"
-            size="sm"
-            className=""
-          >
-            Close
-          </Button>
-        </div>
+          <span className="hidden lg:block">
+            <motion.div variants={listVariants}>
+              <ThemeSwitch />
+            </motion.div>
+          </span>
+
+          <motion.div variants={listVariants}>
+            <Button variant="link" size="sm" className="">
+              Cart
+            </Button>
+          </motion.div>
+
+          <motion.div variants={listVariants}>
+            <Badge onClick={() => setOpen(!open)} variant="outline">
+              Close
+            </Badge>
+          </motion.div>
+        </span>
       </motion.div>
 
       {/* HEADER CONTENT */}
