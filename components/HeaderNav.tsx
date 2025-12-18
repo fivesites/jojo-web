@@ -53,8 +53,8 @@ export default function HeaderNav() {
       {/* TOP PART OF HEADER */}
       <header
         className={` ${
-          admin ? " pl-3 lg:pl-12 bg-background" : "pl-3 bg-background"
-        } fixed z-40 top-0 left-0  right-0 w-full pr-3 pt-1 bg-background h-9`}
+          admin ? " pl-3 lg:pl-12 bg-secondary" : "pl-3 bg-background"
+        } fixed z-40 top-0 left-0  right-0 w-full pr-3 pt-1  h-9`}
       >
         <span className="flex justify-between items-baseline w-full ">
           <Link href="/">

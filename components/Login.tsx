@@ -90,7 +90,9 @@ export default function Login({
       setError(error.message);
       setLoading(false);
     } else {
-      setSuccess("Account created! Please check your email to verify your account.");
+      setSuccess(
+        "Account created! Please check your email to verify your account."
+      );
       setLoading(false);
       // Optionally auto-switch to sign-in after a delay
       setTimeout(() => {
@@ -162,11 +164,7 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button
-          variant="link"
-          size="lg"
-          onClick={() => switchView("sign-up")}
-        >
+        <Button variant="link" size="lg" onClick={() => switchView("sign-up")}>
           Create an account
         </Button>
         <Button
@@ -238,11 +236,7 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button
-          variant="link"
-          size="lg"
-          onClick={() => switchView("sign-in")}
-        >
+        <Button variant="link" size="lg" onClick={() => switchView("sign-in")}>
           Already have an account? Sign in
         </Button>
       </div>
@@ -285,11 +279,7 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button
-          variant="link"
-          size="lg"
-          onClick={() => switchView("sign-in")}
-        >
+        <Button variant="link" size="lg" onClick={() => switchView("sign-in")}>
           Back to sign in
         </Button>
       </div>
@@ -297,16 +287,16 @@ export default function Login({
   );
 
   return (
-    <div className="fixed inset-0 top-0 right-0 left-auto z-40 h-screen overflow-hidden flex flex-col items-start justify-start px-3 w-full lg:w-1/2 bg-background">
+    <div className="fixed inset-0 top-0 right-0 left-auto z-40 h-screen overflow-hidden flex flex-col items-start justify-start  w-full lg:w-1/2 bg-accent p-1">
       <Button
         variant="link"
         size="sm"
-        className="absolute top-0 z-50 left-0"
+        className="absolute top-1 z-50 left-0"
         onClick={() => setOpenLogin(!openLogin)}
       >
         Close [x]
       </Button>
-      <div className="mt-[20vh] flex flex-col w-full items-start justify-start space-y-3">
+      <div className="mt-[20vh] flex flex-col w-full items-start justify-start space-y-3 px-3 pb-9">
         {view === "sign-in" && renderSignIn()}
         {view === "sign-up" && renderSignUp()}
         {view === "forgot-password" && renderForgotPassword()}
