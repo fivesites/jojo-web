@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { useState, FormEvent, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -18,6 +18,8 @@ export default function Login({
   if (!openLogin) return null;
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { signIn, signUp, resetPassword, profile, loading: authLoading } = useAuth();
   const [view, setView] = useState<AuthView>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +27,14 @@ export default function Login({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Store redirect URL from query params when modal opens
+  useEffect(() => {
+    const redirectTo = searchParams.get('redirectTo');
+    if (redirectTo && typeof window !== 'undefined') {
+      sessionStorage.setItem('intendedPath', redirectTo);
+    }
+  }, [searchParams]);
 
   const resetForm = () => {
     setEmail("");
@@ -44,22 +54,41 @@ export default function Login({
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
+    const result = await signIn(email, password);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
+    if (!result.success) {
+      setError(result.error || "An error occurred");
       setLoading(false);
-    } else {
-      setOpenLogin(false);
-      router.push("/admin");
+      return;
+    }
+
+    // Close the modal
+    setOpenLogin(false);
+    setLoading(false);
+  };
+
+  // Handle redirect after successful login when profile is loaded
+  useEffect(() => {
+    if (!authLoading && profile) {
+      // Get intended destination (stored before login redirect)
+      const intendedPath = typeof window !== 'undefined'
+        ? sessionStorage.getItem('intendedPath') || '/'
+        : '/';
+
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('intendedPath');
+      }
+
+      // Redirect based on role
+      if (profile.role === 'admin') {
+        router.push(intendedPath.startsWith('/admin') ? intendedPath : '/admin');
+      } else {
+        // Non-admin users should never go to /admin
+        router.push(intendedPath.startsWith('/admin') ? '/' : intendedPath);
+      }
       router.refresh();
     }
-  };
+  }, [profile, authLoading, router]);
 
   const handleSignUp = async (e: FormEvent) => {
     e.preventDefault();
@@ -79,26 +108,20 @@ export default function Login({
       return;
     }
 
-    const supabase = createClient();
+    const result = await signUp(email, password);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
+    if (!result.success) {
+      setError(result.error || "An error occurred");
       setLoading(false);
-    } else {
-      setSuccess(
-        "Account created! Please check your email to verify your account."
-      );
-      setLoading(false);
-      // Optionally auto-switch to sign-in after a delay
-      setTimeout(() => {
-        switchView("sign-in");
-      }, 3000);
+      return;
     }
+
+    setSuccess("Account created! Please check your email to verify your account.");
+    setLoading(false);
+    // Optionally auto-switch to sign-in after a delay
+    setTimeout(() => {
+      switchView("sign-in");
+    }, 3000);
   };
 
   const handleForgotPassword = async (e: FormEvent) => {
@@ -107,19 +130,16 @@ export default function Login({
     setError(null);
     setSuccess(null);
 
-    const supabase = createClient();
+    const result = await resetPassword(email);
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-
-    if (error) {
-      setError(error.message);
+    if (!result.success) {
+      setError(result.error || "An error occurred");
       setLoading(false);
-    } else {
-      setSuccess("Password reset email sent! Please check your inbox.");
-      setLoading(false);
+      return;
     }
+
+    setSuccess("Password reset email sent! Please check your inbox.");
+    setLoading(false);
   };
 
   const renderSignIn = () => (
@@ -164,7 +184,11 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button variant="link" size="lg" onClick={() => switchView("sign-up")}>
+        <Button
+          variant="link"
+          size="lg"
+          onClick={() => switchView("sign-up")}
+        >
           Create an account
         </Button>
         <Button
@@ -236,7 +260,11 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button variant="link" size="lg" onClick={() => switchView("sign-in")}>
+        <Button
+          variant="link"
+          size="lg"
+          onClick={() => switchView("sign-in")}
+        >
           Already have an account? Sign in
         </Button>
       </div>
@@ -279,7 +307,11 @@ export default function Login({
         </Button>
       </form>
       <div className="flex flex-col items-start justify-start w-full">
-        <Button variant="link" size="lg" onClick={() => switchView("sign-in")}>
+        <Button
+          variant="link"
+          size="lg"
+          onClick={() => switchView("sign-in")}
+        >
           Back to sign in
         </Button>
       </div>
@@ -287,16 +319,16 @@ export default function Login({
   );
 
   return (
-    <div className="fixed inset-0 top-0 right-0 left-auto z-40 h-screen overflow-hidden flex flex-col items-start justify-start  w-full lg:w-1/2 bg-accent p-1">
+    <div className="fixed inset-0 top-0 right-0 left-auto z-40 h-screen overflow-hidden flex flex-col items-start justify-start px-3 w-full lg:w-1/2 bg-background">
       <Button
         variant="link"
         size="sm"
-        className="absolute top-1 z-50 left-0"
+        className="absolute top-0 z-50 left-0"
         onClick={() => setOpenLogin(!openLogin)}
       >
         Close [x]
       </Button>
-      <div className="mt-[20vh] flex flex-col w-full items-start justify-start space-y-3 px-3 pb-9">
+      <div className="mt-[20vh] flex flex-col w-full items-start justify-start space-y-3">
         {view === "sign-in" && renderSignIn()}
         {view === "sign-up" && renderSignUp()}
         {view === "forgot-password" && renderForgotPassword()}
