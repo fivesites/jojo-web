@@ -35,7 +35,7 @@ const ProductInlinePanel = forwardRef<HTMLDivElement, ProductInlinePanelProps>(
           col-span-2
           row-span-2
           bg-background
-     border-b-primary border-b
+     border-b-secondary border-b
           overflow-hidden
           flex
           relative
@@ -66,10 +66,10 @@ const ProductInlinePanel = forwardRef<HTMLDivElement, ProductInlinePanelProps>(
                 </div>
               )}
               <div className="absolute bottom-0 left-0 right-0 flex flex-col lg:flex-row justify-between lg:items-baseline bg-background px-0 py-1">
-                <Badge className=" font-mono pt-0 px-0.5">
+                <Badge variant="secondary" className=" font-mono pt-0 px-0.5">
                   {product.title}
                 </Badge>
-                <p className="text-xs font-mono uppercase text-primary">
+                <p className="text-xs font-mono uppercase text-secondary">
                   {product.price} SEK
                 </p>
               </div>

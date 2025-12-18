@@ -58,18 +58,20 @@ export default function ProductCard({
 
         {/* OUT OF STOCK OVERLAY (always visible) */}
         {isOutOfStock && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-primary/70">
-            <span className="text-xs text-primary-foreground font-mono tracking-wide uppercase">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-secondary/90">
+            <span className="text-xs  font-mono tracking-wide uppercase text-secondary-foreground">
               Out of stock
             </span>
           </div>
         )}
         {/* MOBILE INFO – always visible */}
         {showText && (
-          <CardDescription className="flex flex-col border-b-primary border-b pt-1">
-            <Badge className=" font-mono pt-0 px-1">{product.title}</Badge>
+          <CardDescription className="flex flex-col border-b-secondary border-b pt-1">
+            <Badge variant="secondary" className=" font-mono pt-0 px-1">
+              {product.title}
+            </Badge>
             <span className="flex justify-between items-baseline w-full">
-              <p className="text-xs font-mono uppercase text-primary">
+              <p className="text-xs font-mono uppercase text-secondary">
                 {product.price} SEK
               </p>
 

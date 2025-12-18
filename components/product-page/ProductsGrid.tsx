@@ -140,7 +140,7 @@ export default function ProductsGrid({}: {}) {
         } relative w-full overflow-visible jojo-main-wrapper-top`}
       >
         {/* Sticky header outside the motion/grid */}
-        <div className="sticky top-9 z-30   w-full py-1 bg-background">
+        <div className="sticky top-10 z-20   w-full py-1 bg-background">
           <div className=" flex justify-between items-baseline font-mono text-xs gap-3 w-full ">
             <span className="flex items-baseline font-mono text-xs gap-1">
               <Badge variant="outline">FILTER</Badge>
@@ -149,7 +149,7 @@ export default function ProductsGrid({}: {}) {
               </Badge>
             </span>
             <Badge
-              variant={`${showText ? "outline" : "secondary"}`}
+              variant={`${showText ? "secondary" : "outline"}`}
               onClick={handleShowText}
             >
               T
