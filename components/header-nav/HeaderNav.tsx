@@ -1,15 +1,16 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useSite } from "@/context/SiteContext";
 import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import Login from "./Login";
+import Login from "../Login";
 import MenuOverlay from "./MenuOverlay";
 import { usePathname } from "next/navigation";
+import LogInButton from "./LogInButton";
 
 const headerVariants: Variants = {
   hidden: {},
@@ -94,13 +95,8 @@ export default function HeaderNav() {
             </span>
 
             <motion.div variants={headerItemVariants}>
-              <Button
-                onClick={() => setOpenLogin(!openLogin)}
-                variant="link"
-                size="sm"
-              >
-                Log In
-              </Button>
+              {/* LOG IN BUTTON / NAMN */}
+              <LogInButton openLogin={openLogin} setOpenLogin={setOpenLogin} />
             </motion.div>
             <motion.div variants={headerItemVariants}>
               <Button variant="link" size="sm" className="">
