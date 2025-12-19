@@ -1,4 +1,4 @@
-/* import { Order } from '@/types/order'
+import { Order } from '@/types/order'
 
 export const dummyOrders: Order[] = [
     {
@@ -65,4 +65,4 @@ export const dummyOrders: Order[] = [
         tax: 113,
         total: 563
     }
-] */
+]
