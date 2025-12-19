@@ -12,8 +12,7 @@ import { motion, type Variants, LayoutGroup } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { Badge } from "../ui/badge";
-
-import LoaderGIF from "../LoaderGIF";
+import LoaderJoJo from "../LoaderJoJo";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
@@ -108,7 +107,7 @@ export default function ProductsGrid({}: {}) {
   }, [pathname]);
 
   if (loading) {
-    return <LoaderGIF />;
+    return <LoaderJoJo />;
   }
 
   // Error state
