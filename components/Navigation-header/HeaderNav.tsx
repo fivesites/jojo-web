@@ -17,9 +17,11 @@ import {
 } from "framer-motion";
 import Login from "../Login";
 import MenuOverlay from "./MenuOverlay";
-import { usePathname } from "next/navigation";
+import CartModal from "../CartModal";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import LogInButton from "./LogInButton";
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useCart } from "@/context/CartContext";
 
 const headerVariants: Variants = {
   hidden: {},
@@ -74,16 +76,32 @@ export default function HeaderNav() {
   const { currentSite, toggleSite } = useSite();
   const [open, setOpen] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const { itemCount } = useCart();
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const isAdminPage = pathname.startsWith("/admin");
+  const isAccent = open || isAdminPage;
+
+  // Check for ?login=true query param and auto-open login modal
+  useEffect(() => {
+    const loginParam = searchParams.get("login");
+    if (loginParam === "true") {
+      setOpenLogin(true);
+      // Clear the query param from URL without page reload
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete("login");
+      router.replace(newUrl.pathname + newUrl.search, { scroll: false });
+    }
+  }, [searchParams, router]);
   const isAccent = open;
   const progress = useMotionValue(0);
 
   return (
     <>
-      {/* TOP PART OF HEADER */}
       <header
         className={`
     absolute z-40 top-0 left-0 right-0 w-full  pr-1  h-11 pt-1  
@@ -132,6 +150,24 @@ export default function HeaderNav() {
               {/* LOG IN BUTTON / NAMN */}
               <LogInButton openLogin={openLogin} setOpenLogin={setOpenLogin} />
             </motion.div>
+            <motion.div
+              className="hidden lg:block"
+              variants={headerItemVariants}
+            >
+              <Button
+                variant="link"
+                size="sm"
+                className="relative"
+                onClick={() => setCartOpen(true)}
+              >
+                Cart
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-2 bg-primary text-primary-foreground text-xs min-w-4 h-4 flex items-center justify-center rounded-full px-1">
+                    {itemCount}
+                  </span>
+                )}
+              </Button>
+            </motion.div>
             <motion.div className="" variants={headerItemVariants}>
               <Button variant="link" size="sm" className="">
                 Cart
@@ -161,6 +197,8 @@ export default function HeaderNav() {
           <Login openLogin={openLogin} setOpenLogin={setOpenLogin} />
         )}
       </AnimatePresence>
+
+      <CartModal open={cartOpen} setOpen={setCartOpen} />
     </>
   );
 }

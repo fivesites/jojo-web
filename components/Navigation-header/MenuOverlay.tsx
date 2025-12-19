@@ -3,11 +3,12 @@
 import { motion, type Variants } from "framer-motion";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0, x: -100 },
@@ -61,7 +62,46 @@ export default function MenuOverlay({
 }) {
   const categories = ["Clothing", "Accessories", "Shoes", "Bags"];
   const pathname = usePathname();
+  const router = useRouter();
   const isAdminPage = pathname.startsWith("/admin");
+  const { isAuthenticated, isAdmin, signOut } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      setOpen(false);
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Build navigation items based on user authentication and role
+  const navItems = useMemo(() => {
+    const baseItems = [
+      { label: "Products", href: "/" },
+      { label: "Visit The Store", href: "/" },
+      { label: "About JOJO", href: "/pages/about" },
+      { label: "Privacy Policy", href: "/pages/privacy-policy" },
+      { label: "Imprint", href: "/pages/imprint" },
+    ];
+
+    // Add Profile or Admin link based on user role
+    if (isAuthenticated) {
+      if (isAdmin) {
+        baseItems.push({ label: "Admin", href: "/admin" });
+      } else {
+        baseItems.push({ label: "Profile", href: "/profile" });
+      }
+    }
+
+    return baseItems;
+  }, [isAuthenticated, isAdmin]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -80,14 +120,6 @@ export default function MenuOverlay({
         animate="visible"
         exit="exit"
       >
-        <Button
-          onClick={() => setOpen(!open)}
-          variant="outline"
-          size="sm"
-          className="absolute top-1 left-1  w-min"
-        >
-          CLOSE
-        </Button>{" "}
         {/* HEADER CONTENT */}
         <div className=" jojo-main-wrapper-top h-full w-full flex flex-col lg:flex-row ">
           <motion.div
@@ -107,14 +139,7 @@ export default function MenuOverlay({
                 className="flex flex-col  text-sm font-mono"
                 variants={listVariants}
               >
-                {[
-                  { label: "Products", href: "/" },
-                  { label: "Visit The Store", href: "/" },
-                  { label: "About JOJO", href: "/pages/about" },
-                  { label: "Privacy Policy", href: "/pages/privacy-policy" },
-                  { label: "Imprint", href: "/pages/imprint" },
-                  { label: "Admin", href: "/admin" },
-                ].map((item) => (
+                {navItems.map((item) => (
                   <motion.li key={item.label} variants={itemVariants}>
                     <Link href={item.href} onClick={() => setOpen(false)}>
                       <Button variant="link" size="sm">
@@ -123,6 +148,18 @@ export default function MenuOverlay({
                     </Link>
                   </motion.li>
                 ))}
+                {isAuthenticated && (
+                  <motion.li variants={itemVariants}>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                    >
+                      {isLoggingOut ? "Logging out..." : "Log Out"}
+                    </Button>
+                  </motion.li>
+                )}
               </motion.ul>
             </nav>
           </motion.div>
