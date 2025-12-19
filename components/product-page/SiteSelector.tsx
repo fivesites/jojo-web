@@ -40,12 +40,14 @@ export default function SiteSelector() {
             variants={columnVariants}
           >
             <div className=" w-full h-full relative z-10 flex flex-col items-center justify-center ">
-              <button
+              <Button
+                variant="secondary"
+                size="default"
                 onClick={() => setCurrentSite("sale")}
-                className={`h-9  font-display font-medium text-2xl px-2 whitespace-nowrap pb-1     border-2 border-background text-background flex items-center pt-0.5  hover:text-background hover:bg-secondary hover:border-secondary transition-all cursor-pointer`}
+                className={``}
               >
                 For Sale
-              </button>
+              </Button>
             </div>
           </motion.div>
           <motion.div
@@ -53,12 +55,14 @@ export default function SiteSelector() {
             variants={columnVariants}
           >
             <div className="w-full h-full relative z-10 flex flex-col items-center justify-center ">
-              <button
-                onClick={() => setCurrentSite("sale")}
-                className={`h-9  font-display font-medium text-2xl px-2 whitespace-nowrap pb-1     border-2 border-background text-background flex items-center pt-0.5  hover:text-background hover:bg-secondary hover:border-secondary transition-all cursor-pointer`}
+              <Button
+                variant="secondary"
+                size="default"
+                onClick={() => setCurrentSite("rent")}
+                className={``}
               >
-                For Rent
-              </button>
+                For Sale
+              </Button>
             </div>
           </motion.div>
         </motion.section>

@@ -7,7 +7,7 @@
   }
 
   .jojo-main-wrapper-top {
-    @apply pt-[10vh] lg:pt-[20vh] px-1 pb-1;
+    @apply pt-[10vh] lg:pt-[20vh]  pb-1;
   }
 
   .jojo-container-padding {
@@ -60,7 +60,7 @@
   --font-serif-densed: var(--font-CLTSerifDensed);
   --font-serif-wide: var(--font-CLTSerifWide);
 
-  --radius: 0rem;
+  --radius: 0.5rem;
   --shadow-x: 0px;
   --shadow-y: 1px;
   --shadow-blur: 2px;

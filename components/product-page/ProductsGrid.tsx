@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { Badge } from "../ui/badge";
 import LoaderJoJo from "../LoaderJoJo";
+import { Input } from "../ui/input";
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 type ButtonSize = VariantProps<typeof buttonVariants>["size"];
@@ -107,7 +108,7 @@ export default function ProductsGrid({}: {}) {
   }, [pathname]);
 
   if (loading) {
-    return <LoaderJoJo />;
+    return <LoaderJoJo loading={loading} />;
   }
 
   // Error state
@@ -132,69 +133,83 @@ export default function ProductsGrid({}: {}) {
   }
 
   return (
-    <LayoutGroup>
-      <div
-        className={` ${
-          currentSite === "sale" ? "bg-background" : "bg-background"
-        } relative w-full overflow-visible jojo-main-wrapper-top`}
-      >
-        {/* Sticky header outside the motion/grid */}
-        <div className="sticky top-10 z-20   w-full py-1 bg-background">
-          <div className=" flex justify-between items-baseline font-mono text-xs gap-3 w-full ">
-            <span className="flex items-baseline font-mono text-xs gap-1">
-              <Badge variant="outline">FILTER</Badge>
-              <Badge variant="ghost">
-                Latest Added <span>[x]</span>
-              </Badge>
-            </span>
-            <Badge
-              variant={`${showText ? "secondary" : "outline"}`}
-              onClick={handleShowText}
-            >
-              T
-            </Badge>
-          </div>
-        </div>
-        <motion.div
-          key={`${currentSite}-${layoutIndex}`}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className={` grid  ${
-            layouts[layoutIndex]
-          } gap-x-1.5 gap-y-1.5 relative  pb-1 ${
+    <>
+      <LayoutGroup>
+        <div
+          className={` ${
             currentSite === "sale" ? "bg-background" : "bg-background"
-          }  `}
+          } relative w-full overflow-visible jojo-main-wrapper-top  `}
         >
-          {products.map((product) => (
-            <Fragment key={product.id}>
-              <motion.div
-                layout
-                layoutId={`product-${product.id}`} // Ensure product.id is always a number
-                onClick={() => setActiveProduct(Number(product.id))}
-              >
-                <ProductCard
-                  showText={showText}
-                  setShowText={setShowText}
-                  key={product.id}
-                  product={product}
-                />
-              </motion.div>
+          <LoaderJoJo loading={loading} />
+          {/* Sticky header outside the motion/grid */}
 
-              {activeProduct === product.id && (
-                <ProductInlinePanel
-                  ref={inlinePanelRef}
-                  product={product}
-                  mode="view"
-                  onClose={() => setActiveProduct(null)}
+          <div className="sticky top-1 z-20   w-full py-1 bg-background px-1  ">
+            <div className=" grid grid-cols-4 items-baseline  gap-1 w-full  ">
+              <div className="flex justify-between w-full col-span-4">
+                <span className="flex justify-start space-x-1">
+                  <Button
+                    size="icon"
+                    variant={showText ? "secondary" : "outline"}
+                    onClick={handleShowText}
+                    className=""
+                  >
+                    T
+                  </Button>
+                  <Button variant="secondary" size="sm">
+                    FILTER PRODUCTS
+                  </Button>
+                  <Badge className=" " variant="outline">
+                    Show All
+                  </Badge>
+                </span>
+                <Input
+                  className=" px-2 h-6 ml-1 placeholder:text-xs w-full bg-background border-l-secondary"
+                  placeholder="Search Products..."
                 />
-              )}
-            </Fragment>
-          ))}
+              </div>
+            </div>
+          </div>
+          <motion.div
+            key={`${currentSite}-${layoutIndex}`}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={` grid  ${
+              layouts[layoutIndex]
+            } gap-x-1.5 gap-y-1.5 relative  pb-1 px-1 ${
+              currentSite === "sale" ? "bg-background" : "bg-background"
+            }  `}
+          >
+            {products.map((product) => (
+              <Fragment key={product.id}>
+                <motion.div
+                  layout
+                  layoutId={`product-${product.id}`} // Ensure product.id is always a number
+                  onClick={() => setActiveProduct(Number(product.id))}
+                >
+                  <ProductCard
+                    showText={showText}
+                    setShowText={setShowText}
+                    key={product.id}
+                    product={product}
+                  />
+                </motion.div>
 
-          {/* <div className="absolute left-1/2 top-0 h-full w-px bg-foreground transform -translate-x-1/2 z-0" /> */}
-        </motion.div>
-      </div>
-    </LayoutGroup>
+                {activeProduct === product.id && (
+                  <ProductInlinePanel
+                    ref={inlinePanelRef}
+                    product={product}
+                    mode="view"
+                    onClose={() => setActiveProduct(null)}
+                  />
+                )}
+              </Fragment>
+            ))}
+
+            {/* <div className="absolute left-1/2 top-0 h-full w-px bg-foreground transform -translate-x-1/2 z-0" /> */}
+          </motion.div>
+        </div>
+      </LayoutGroup>
+    </>
   );
 }

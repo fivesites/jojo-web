@@ -4,10 +4,17 @@ import { Button } from "../ui/button";
 import { useSite } from "@/context/SiteContext";
 import { useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
+import LoaderJoJo from "../LoaderJoJo";
 
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  animate,
+  type Variants,
+} from "framer-motion";
 import Login from "../Login";
 import MenuOverlay from "./MenuOverlay";
 import { usePathname } from "next/navigation";
@@ -39,21 +46,47 @@ const headerItemVariants: Variants = {
   },
 };
 
+// LOADING BAR VARIANTS
+
+const loadingBarVariants: Variants = {
+  idle: {
+    scaleX: 0,
+    backgroundColor: "var(--accent)",
+  },
+  loading: {
+    scaleX: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+  complete: {
+    scaleX: 1,
+    backgroundColor: "var(--secondary)",
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
 export default function HeaderNav() {
   const { currentSite, toggleSite } = useSite();
   const [open, setOpen] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
 
   const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
   const isAdminPage = pathname.startsWith("/admin");
-  const isAccent = open || isAdminPage;
+  const isAccent = open;
+  const progress = useMotionValue(0);
 
   return (
     <>
       {/* TOP PART OF HEADER */}
       <header
         className={`
-    fixed z-40 top-0 left-0 right-0 w-full  pr-1  h-11 pt-1 
+    absolute z-40 top-0 left-0 right-0 w-full  pr-1  h-11 pt-1  
     ${isAccent ? "bg-accent" : "bg-background"}
     ${isAdminPage ? "pl-1 lg:pl-10 " : "pl-1 "}
     ${isAdminPage && open ? "pl-3 lg:pl-10  " : "pl-1"}
@@ -63,12 +96,15 @@ export default function HeaderNav() {
           variants={headerVariants}
           initial="hidden"
           animate="visible"
-          className="flex justify-start items-start space-x-1 w-full 
+          className="grid grid-cols-4  w-full 
            "
         >
-          <motion.h1 className="" variants={headerItemVariants}>
+          <motion.h1
+            className="col-span-4 lg:col-span-1"
+            variants={headerItemVariants}
+          >
             <Link
-              className="flex justify-start space-x-1 whitespace-nowrap"
+              className=" flex justify-start space-x-1 whitespace-nowrap"
               href="/"
             >
               <svg
@@ -85,55 +121,33 @@ export default function HeaderNav() {
                 />
               </svg>
 
-              <button className=" text-sm font-display font-normal tracking-wide flex flex-col items-start justify-start border px-1 h-min pb-0.5 bg-transparent text-secondary">
+              <Button variant="outline" size="sm">
                 STUDIO
-              </button>
+              </Button>
             </Link>
           </motion.h1>
 
-          <div className="flex justify-end items-center  w-full">
-            <motion.div
-              className="hidden lg:block"
-              variants={headerItemVariants}
-            >
+          <div className="hidden lg:flex col-start-4 col-span-1 justify-between items-center   w-full px-3">
+            <motion.div className="" variants={headerItemVariants}>
               {/* LOG IN BUTTON / NAMN */}
               <LogInButton openLogin={openLogin} setOpenLogin={setOpenLogin} />
             </motion.div>
-            <motion.div
-              className="hidden lg:block"
-              variants={headerItemVariants}
-            >
+            <motion.div className="" variants={headerItemVariants}>
               <Button variant="link" size="sm" className="">
                 Cart
               </Button>
             </motion.div>
-
-            <motion.div
-              className="block lg:hidden"
+            <motion.div className="" variants={headerItemVariants}>
+              <ThemeSwitch />
+            </motion.div>
+            {/* <motion.div
+              className="fixed top-0 right-0 z-40 bg-background  px-1 pb-1 pt-2"
               variants={headerItemVariants}
             >
-              <Button
-                onClick={() => setOpen(!open)}
-                className="aspect-square ml-1 h-9"
-                variant="outline"
-                size="sm"
-              >
-                {open ? <Cross1Icon /> : <HamburgerMenuIcon />}
+              <Button variant="outline" size="default">
+                MENU
               </Button>
-            </motion.div>
-            <motion.div
-              className="hidden lg:block"
-              variants={headerItemVariants}
-            >
-              <Button
-                onClick={() => setOpen(!open)}
-                className="aspect-square h-9"
-                variant="outline"
-                size="sm"
-              >
-                {open ? "Close" : "Menu"}
-              </Button>
-            </motion.div>
+            </motion.div> */}
           </div>
         </motion.div>
       </header>

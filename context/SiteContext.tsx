@@ -41,7 +41,7 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
     <SiteContext.Provider
       value={{ currentSite, setCurrentSite, toggleSite, loading }}
     >
-      {loading && <LoaderJoJo />}
+      {loading && <LoaderJoJo loading={loading} />}
       {children}
     </SiteContext.Provider>
   );
