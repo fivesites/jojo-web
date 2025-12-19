@@ -11,6 +11,7 @@ import React from "react";
 import { ProductProvider } from "@/context/ProductContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 export const gtSans = localFont({
   src: [
@@ -130,23 +131,25 @@ export default async function RootLayout({
       >
         <AuthProvider>
           <CartProvider>
-            <ProductProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <SiteProvider>
-                  <ContentProvider pages={pages} posts={posts}>
-                    <HeaderNav />
+            <WishlistProvider>
+              <ProductProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <SiteProvider>
+                    <ContentProvider pages={pages} posts={posts}>
+                      <HeaderNav />
 
-                    {children}
-                    {modal}
-                  </ContentProvider>
-                </SiteProvider>
-              </ThemeProvider>
-            </ProductProvider>
+                      {children}
+                      {modal}
+                    </ContentProvider>
+                  </SiteProvider>
+                </ThemeProvider>
+              </ProductProvider>
+            </WishlistProvider>
           </CartProvider>
         </AuthProvider>
       </body>
