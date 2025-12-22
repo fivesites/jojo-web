@@ -89,7 +89,7 @@ export default function MenuOverlay({
   return (
     <>
       <motion.div
-        className={`fixed z-50 top-0 left-0 right-0 w-full h-screen flex flex-col pr-1
+        className={`fixed z-50 top-0 left-0 right-0 w-1/2 h-screen flex flex-col pr-1
     ${isAdminPage ? "pl-0 lg:pl-9 " : "pl-0 "} bg-secondary`}
         variants={overlayVariants}
         initial="hidden"
@@ -133,7 +133,7 @@ export default function MenuOverlay({
         {/* HEADER CONTENT */}
         <div className=" px-1 mt-[20vh] lg:mt-[20vh] h-full w-full flex flex-col lg:flex-row ">
           <motion.div
-            className="h-auto w-full  lg:w-1/2   flex flex-col justify-start items-start   space-y-6 jojo-container-padding "
+            className="h-auto w-full  lg:w-full   flex flex-col justify-start items-start   space-y-6 jojo-container-padding "
             variants={sectionVariants}
           >
             <div className="grid w-full    text-xs  px-3">
@@ -176,12 +176,13 @@ export default function MenuOverlay({
                 )}
               </motion.ul>
             </nav>
+            {/* FILTRERING CATEGORIER MM */}
           </motion.div>
-          <motion.div
+          {/* <motion.div
             className=" w-full h-full lg:h-screen lg:w-1/2   flex flex-col  px-6 space-y-6  "
             variants={sectionVariants}
           >
-            {/* Categories */}
+
             <motion.div
               className="grid grid-cols-2   justify-between  lg:flex-col items-baseline lg:justify-start  gap-0 border-t border-t-background py-9 "
               variants={listVariants}
@@ -198,7 +199,7 @@ export default function MenuOverlay({
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.div>
     </>

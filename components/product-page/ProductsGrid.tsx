@@ -20,6 +20,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useProductFilters, type SortOption } from "@/hooks/useProductFilters";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -87,6 +88,12 @@ export default function ProductsGrid({}: {}) {
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
+  const sortOptions: SortOption[] = [
+    "latest",
+    "oldest",
+    "price-asc",
+    "price-desc",
+  ];
 
   const categories = [
     { id: 1, name: "accessories" },
@@ -163,6 +170,91 @@ export default function ProductsGrid({}: {}) {
     });
   }, [fullyFiltered, sortBy]);
 
+  const activeFilters = useMemo(() => {
+    const list: {
+      key: string;
+      label: string;
+      onRemove?: () => void;
+      onClick?: () => void;
+    }[] = [];
+
+    // CATEGORY
+    if (filters.category !== undefined) {
+      const cat = categories.find((c) => c.id === filters.category);
+      if (cat) {
+        list.push({
+          key: `category-${cat.id}`,
+          label: `${cat.name}`,
+          onRemove: () => setCategory(undefined),
+        });
+      }
+    }
+
+    // TAG
+    if (filters.tag !== undefined) {
+      const tag = tags.find((t) => t.id === filters.tag);
+      if (tag) {
+        list.push({
+          key: `tag-${tag.id}`,
+          label: `#${tag.name}`,
+          onRemove: () => setTag(undefined),
+        });
+      }
+    }
+
+    // SIZE
+    if (filters.size !== undefined) {
+      list.push({
+        key: `size-${filters.size}`,
+        label: `Size: ${filters.size}`,
+        onRemove: () => setSize(undefined),
+      });
+    }
+
+    // SORT — toggle
+    if (sortBy) {
+      const sortLabels: Record<string, string> = {
+        latest: "Latest",
+        oldest: "Oldest",
+        "price-asc": "Price ↑",
+        "price-desc": "Price ↓",
+      };
+
+      list.push({
+        key: `sort-${sortBy}`,
+        label: `Sort: ${sortLabels[sortBy] ?? sortBy}`,
+        onClick: () => {
+          const currentIndex = sortOptions.indexOf(sortBy);
+          const nextIndex = (currentIndex + 1) % sortOptions.length;
+          setSortBy(sortOptions[nextIndex]);
+        },
+      });
+    }
+
+    // SEARCH
+    if (search.trim()) {
+      list.push({
+        key: "search",
+        label: `Search: “${search}”`,
+        onRemove: () => setSearch(""),
+      });
+    }
+
+    return list;
+  }, [
+    filters.category,
+    filters.tag,
+    filters.size,
+    sortBy,
+    search,
+    categories,
+    tags,
+    setCategory,
+    setTag,
+    setSize,
+    setSortBy,
+  ]);
+
   useEffect(() => {
     if (activeProduct && inlinePanelRef.current) {
       inlinePanelRef.current.scrollIntoView({
@@ -237,20 +329,9 @@ export default function ProductsGrid({}: {}) {
           } relative w-full overflow-visible jojo-main-wrapper-top  `}
         >
           <LoaderJoJo loading={loading} />
-          {/* Sticky header outside the motion/grid */}
 
           <div className="sticky top-1 z-40   w-full py-1 bg-background px-1 space-y-1 ">
             <div className=" flex justify-between items-baseline   w-full   ">
-              {/* <span className="flex justify-start items- space-x-1 ">
-                <Button
-                  variant={showFilters ? "secondary" : "outline"}
-                  onClick={() => setShowFilters((v) => !v)}
-                >
-                  FILTERS
-                </Button>
-              </span> */}
-
-              {/* SMALL VERSION */}
               <div className=" flex justify-evenly w-full space-x-1">
                 <Button
                   className="font-display"
@@ -260,29 +341,29 @@ export default function ProductsGrid({}: {}) {
                 >
                   FILTERS
                 </Button>
-                {/* <span className="flex justify-start items-center w-full border border-r-transparent border-t-transparent  border-l-secondary border-b-secondary">
-                  <Input
-                    className="h-8 w-full bg-background px-1.5 font-display uppercase text-secondary  text-2xl pb-2 items-baseline border-transparent placeholder:text-2xl "
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </span> */}
-                {/* SMALL VERSION */}
+                {showFilters &&
+                  activeFilters.map((filter) => (
+                    <Button
+                      key={filter.key}
+                      size="sm"
+                      variant="secondary"
+                      className="whitespace-nowrap w-fit flex items-center gap-1 uppercase"
+                      onClick={filter.onClick || filter.onRemove}
+                    >
+                      {filter.label}
+                      {filter.onRemove && (
+                        <Cross1Icon className="w-3 h-3 p-0.5 text-current" />
+                      )}
+                    </Button>
+                  ))}
+
                 <Input
                   className="h-6 bg-background text-sm border-l border-l-secondary px-1.5 w-full"
                   placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                {/* <Button
-                  variant={showText ? "secondary" : "outline"}
-                  onClick={handleShowText}
-                  className=""
-                >
-                  T
-                </Button> */}
-                {/* SMALL */}
+
                 <Button
                   variant={showText ? "secondary" : "outline"}
                   onClick={handleShowText}

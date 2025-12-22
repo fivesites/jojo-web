@@ -6,7 +6,8 @@ import { useState, useEffect, useMemo } from "react";
 import { Badge } from "../ui/badge";
 import LoaderJoJo from "../LoaderJoJo";
 import { useAuth } from "@/context/AuthContext";
-
+import { HeartIcon } from "@radix-ui/react-icons";
+import { useWishlist } from "@/context/WishlistContext";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
 import {
@@ -24,6 +25,7 @@ import LogInButton from "./LogInButton";
 import {
   Cross1Icon,
   HamburgerMenuIcon,
+  HeartFilledIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { useCart } from "@/context/CartContext";
@@ -84,6 +86,7 @@ export default function HeaderNav() {
   const [openLogin, setOpenLogin] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const { itemCount } = useCart();
+  const { itemCount: wishlistItemCount } = useWishlist();
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -180,7 +183,11 @@ export default function HeaderNav() {
           </motion.h1>
           <motion.div variants={headerItemVariants}>
             <Button onClick={toggleSite} variant="secondary">
-              {currentSite === "sale" ? "For Sale" : "For Rent"}
+              {currentSite === "sale"
+                ? "For Sale"
+                : currentSite === "rent"
+                ? "For Rent"
+                : "Studio"}
             </Button>
           </motion.div>
           <motion.div className="" variants={headerItemVariants}>
@@ -195,11 +202,47 @@ export default function HeaderNav() {
           </motion.div>
         </span>
 
-        <span className="flex justify-end items-center space-x-1 lg:pr-1">
+        <span className="flex justify-end items-center space-x-1 lg:pr-1 w-full">
           <motion.div className="" variants={headerItemVariants}>
             <LogInButton openLogin={openLogin} setOpenLogin={setOpenLogin} />
           </motion.div>
 
+          <motion.div
+            className={` ${currentSite === "neutral" ? "hidden" : "block"}`}
+            variants={headerItemVariants}
+          >
+            <Button
+              variant="link"
+              size="sm"
+              className="relative hidden lg:block "
+              onClick={() => setOpenLogin}
+            >
+              Wishlist
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-0.5 -right-2 bg-secondary text-secondary-foreground text-xs min-w-4 h-4 flex items-center justify-center rounded-full px-1 pb-0.5 font-mono">
+                  {wishlistItemCount}
+                </span>
+              )}
+            </Button>
+          </motion.div>
+          <motion.div
+            className={` ${currentSite === "neutral" ? "hidden" : "block"}`}
+            variants={headerItemVariants}
+          >
+            <Button
+              variant="link"
+              size="sm"
+              className="block lg:hidden relative aspect-square "
+              onClick={() => setOpenLogin}
+            >
+              <HeartIcon />
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-secondary text-secondary-foreground text-xs w-3 h-3 flex items-center justify-center rounded-full px-1 pb-0.5 font-mono">
+                  {wishlistItemCount}
+                </span>
+              )}
+            </Button>
+          </motion.div>
           <motion.div
             className={` ${currentSite === "neutral" ? "hidden" : "block"}`}
             variants={headerItemVariants}
@@ -217,6 +260,11 @@ export default function HeaderNav() {
                 </span>
               )}
             </Button>
+          </motion.div>
+          <motion.div
+            className={` ${currentSite === "neutral" ? "hidden" : "block"}`}
+            variants={headerItemVariants}
+          >
             <Button
               variant="ghost"
               size="default"
@@ -245,7 +293,6 @@ export default function HeaderNav() {
               )}
             </Button>
           </motion.div>
-          <motion.div className="" variants={headerItemVariants}></motion.div>
         </span>
       </header>
 

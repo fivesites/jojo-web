@@ -3,7 +3,12 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-export type SortOption = "latest" | "oldest" | "price-asc" | "price-desc";
+export type SortOption =
+  | "latest"
+  | "oldest"
+  | "price-asc"
+  | "price-desc"
+  | null;
 
 export type ProductFilters = {
   category?: number;
