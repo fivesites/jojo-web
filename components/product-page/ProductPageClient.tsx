@@ -20,8 +20,6 @@ export default function ProductPageClient() {
       {currentSite !== "neutral" && loading && <LoaderJoJo loading={loading} />}
 
       {currentSite !== "neutral" && !loading && <ProductsGrid />}
-
-      <FloatingNav />
     </div>
   );
 }

@@ -22,9 +22,9 @@ export default function ThemeSwitch() {
     <>
       <Button
         onClick={() => setTheme(isDark ? "light" : "dark")}
-        variant="link"
+        variant="secondary"
         size="sm"
-        className={` `}
+        className={`uppercase `}
       >
         {isDark ? "Light Mode" : "Dark Mode"}
       </Button>

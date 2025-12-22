@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { PersonIcon } from "@radix-ui/react-icons";
 
 export default function LogInButton({
   openLogin,
@@ -21,7 +22,10 @@ export default function LogInButton({
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -60,7 +64,11 @@ export default function LogInButton({
   // Not authenticated - show Log In button
   if (!isAuthenticated) {
     return (
-      <Button onClick={() => setOpenLogin(!openLogin)} variant="link" size="sm">
+      <Button
+        onClick={() => setOpenLogin(!openLogin)}
+        variant="outline"
+        size="sm"
+      >
         Log In
       </Button>
     );
@@ -73,10 +81,19 @@ export default function LogInButton({
     <div className="relative" ref={dropdownRef}>
       <Button
         variant="link"
+        className="hidden lg:block"
         size="sm"
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         {displayName}
+      </Button>
+      <Button
+        variant="ghost"
+        className="block lg:hidden aspect-square"
+        size="default"
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+      >
+        <PersonIcon />
       </Button>
       {dropdownOpen && (
         <div className="absolute right-0 top-full mt-1 w-48 bg-background border border-border shadow-lg z-50">

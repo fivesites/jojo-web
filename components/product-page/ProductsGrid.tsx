@@ -1,7 +1,7 @@
 "use client";
 
 import ProductCard from "./ProductCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button, type buttonVariants } from "../ui/button";
 import type { VariantProps } from "class-variance-authority";
 import { useSite } from "@/context/SiteContext";
@@ -11,12 +11,15 @@ import ProductInlinePanel from "./ProductInlinePanel";
 import { motion, type Variants, LayoutGroup } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
-import { Badge } from "../ui/badge";
+
 import LoaderJoJo from "../LoaderJoJo";
 import { Input } from "../ui/input";
 
-type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
-type ButtonSize = VariantProps<typeof buttonVariants>["size"];
+import { useWishlist } from "@/context/WishlistContext";
+
+import { useProductFilters, type SortOption } from "@/hooks/useProductFilters";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -38,15 +41,10 @@ const cardVariants: Variants = {
 };
 
 function ToggleGridColsButton({
-  buttonText,
-  size = "sm",
-  variant = "link",
   layouts,
+  layoutIndex,
   setLayoutIndex,
 }: {
-  buttonText: string;
-  size?: ButtonSize;
-  variant?: ButtonVariant;
   layouts: string[];
   layoutIndex: number;
   setLayoutIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -56,26 +54,114 @@ function ToggleGridColsButton({
   };
 
   return (
-    <Button onClick={toggleCols} size={size} variant={variant}>
-      {buttonText}
-    </Button>
+    <span onClick={toggleCols} className="cursor-pointer select-none">
+      +/-
+    </span>
   );
 }
 
 export default function ProductsGrid({}: {}) {
-  const { currentSite } = useSite();
-  const { products: allProducts, loading, error } = useProducts();
+  const {
+    products: allProducts,
+    filterProducts,
+    loading,
+    error,
+  } = useProducts();
+  const searchParams = useSearchParams();
+
   const [activeProduct, setActiveProduct] = useState<number | null>(null);
   const inlinePanelRef = useRef<HTMLDivElement | null>(null);
+  const { toggleItem } = useWishlist();
+  const router = useRouter();
+  const { currentSite, setCurrentSite } = useSite();
+  const [showTags, setShowTags] = useState(false);
 
-  // Filter products based on current site (sale or rent)
-  const products = allProducts.filter((product) => {
+  const [layoutIndex, setLayoutIndex] = useState<number>(2);
+  const [showText, setShowText] = useState(true);
+  const [showSort, setShowSort] = useState(false);
+
+  const [modalProduct, setModalProduct] = useState<number | null>(null);
+
+  const [showFilters, setShowFilters] = useState(true);
+  const [showCategory, setShowCategory] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
+
+  const categories = [
+    { id: 1, name: "accessories" },
+    { id: 2, name: "bags" },
+    { id: 3, name: "clothing" },
+    { id: 4, name: "shoes" },
+  ];
+
+  const tags = [
+    { id: 1, name: "y2k" },
+    { id: 2, name: "summer" },
+    { id: 3, name: "christmas" },
+  ];
+
+  const {
+    filters,
+    sortBy,
+    setCategory,
+    setTag,
+    setSize,
+    setSortBy,
+    clearFilters,
+  } = useProductFilters();
+
+  const siteFiltered = useMemo(() => {
     if (currentSite === "sale") {
-      return product.for_sale === true;
-    } else {
-      return product.for_sale === false;
+      return allProducts.filter((p) => p.for_sale === true);
     }
-  });
+
+    if (currentSite === "rent") {
+      return allProducts.filter((p) => p.for_sale === false);
+    }
+
+    return allProducts;
+  }, [allProducts, currentSite]);
+
+  // inside your filtering
+  const fullyFiltered = useMemo(() => {
+    return siteFiltered.filter((p) => {
+      if (filters.category && p.category_id !== filters.category) return false;
+      if (filters.tag && p.tag_id !== filters.tag) return false;
+      if (filters.size && p.size_id !== filters.size) return false;
+
+      if (debouncedSearch) {
+        const term = debouncedSearch.toLowerCase();
+        const matches =
+          p.title?.toLowerCase().includes(term) ||
+          p.designer?.toLowerCase().includes(term) ||
+          p.description?.toLowerCase().includes(term);
+        if (!matches) return false;
+      }
+
+      return true;
+    });
+  }, [siteFiltered, filters, debouncedSearch]);
+
+  const sortedProducts = useMemo(() => {
+    return [...fullyFiltered].sort((a, b) => {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+
+      switch (sortBy) {
+        case "latest":
+          return dateB - dateA;
+        case "oldest":
+          return dateA - dateB;
+        case "price-asc":
+          return (a.price ?? 0) - (b.price ?? 0);
+        case "price-desc":
+          return (b.price ?? 0) - (a.price ?? 0);
+        default:
+          return 0;
+      }
+    });
+  }, [fullyFiltered, sortBy]);
 
   useEffect(() => {
     if (activeProduct && inlinePanelRef.current) {
@@ -86,17 +172,15 @@ export default function ProductsGrid({}: {}) {
     }
   }, [activeProduct]);
 
-  const [layoutIndex, setLayoutIndex] = useState<number>(1);
-  const [showText, setShowText] = useState(false);
-
   const handleShowText = () => {
     setShowText((prev) => !prev);
   };
 
   const layouts = [
-    "grid-cols-4 lg:grid-cols-8 grid-rows-auto   auto-rows-fr",
-    "grid-cols-2 lg:grid-cols-6 grid-rows-auto auto-rows-fr",
-    "grid-cols-1 lg:grid-cols-4 grid-rows-auto auto-rows-fr",
+    "grid-cols-4 lg:grid-cols-6 grid-rows-auto   auto-rows-fr",
+    "grid-cols-3 lg:grid-cols-5 grid-rows-auto auto-rows-fr",
+    "grid-cols-2 lg:grid-cols-4 grid-rows-auto auto-rows-fr",
+    "grid-cols-1 lg:grid-cols-3 grid-rows-auto auto-rows-fr",
   ];
 
   const pathname = usePathname();
@@ -106,6 +190,18 @@ export default function ProductsGrid({}: {}) {
       setActiveProduct(null);
     }
   }, [pathname]);
+
+  function handleToggleActiveProduct(productId: number) {
+    setModalProduct(null);
+    setActiveProduct((prev) => (prev === productId ? null : productId));
+  }
+
+  const openModal = (id: number) => {
+    setActiveProduct(null);
+    setModalProduct(id);
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(`/products/${id}?${params.toString()}`);
+  };
 
   if (loading) {
     return <LoaderJoJo loading={loading} />;
@@ -121,7 +217,7 @@ export default function ProductsGrid({}: {}) {
   }
 
   // Empty state
-  if (products.length === 0) {
+  if (sortedProducts.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-sm opacity-60">
@@ -143,32 +239,167 @@ export default function ProductsGrid({}: {}) {
           <LoaderJoJo loading={loading} />
           {/* Sticky header outside the motion/grid */}
 
-          <div className="sticky top-1 z-20   w-full py-1 bg-background px-1  ">
-            <div className=" grid grid-cols-4 items-baseline  gap-1 w-full  ">
-              <div className="flex justify-between w-full col-span-4">
-                <span className="flex justify-start space-x-1">
-                  <Button
-                    size="icon"
-                    variant={showText ? "secondary" : "outline"}
-                    onClick={handleShowText}
-                    className=""
-                  >
-                    T
-                  </Button>
-                  <Button variant="secondary" size="sm">
-                    FILTER PRODUCTS
-                  </Button>
-                  <Badge className=" " variant="outline">
-                    Show All
-                  </Badge>
-                </span>
+          <div className="sticky top-1 z-40   w-full py-1 bg-background px-1 space-y-1 ">
+            <div className=" flex justify-between items-baseline   w-full   ">
+              {/* <span className="flex justify-start items- space-x-1 ">
+                <Button
+                  variant={showFilters ? "secondary" : "outline"}
+                  onClick={() => setShowFilters((v) => !v)}
+                >
+                  FILTERS
+                </Button>
+              </span> */}
+
+              {/* SMALL VERSION */}
+              <div className=" flex justify-evenly w-full space-x-1">
+                <Button
+                  className="font-display"
+                  variant={showFilters ? "secondary" : "outline"}
+                  size="sm"
+                  onClick={() => setShowFilters((v) => !v)}
+                >
+                  FILTERS
+                </Button>
+                {/* <span className="flex justify-start items-center w-full border border-r-transparent border-t-transparent  border-l-secondary border-b-secondary">
+                  <Input
+                    className="h-8 w-full bg-background px-1.5 font-display uppercase text-secondary  text-2xl pb-2 items-baseline border-transparent placeholder:text-2xl "
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </span> */}
+                {/* SMALL VERSION */}
                 <Input
-                  className=" px-2 h-6 ml-1 placeholder:text-xs w-full bg-background border-l-secondary"
-                  placeholder="Search Products..."
+                  className="h-6 bg-background text-sm border-l border-l-secondary px-1.5 w-full"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
+                {/* <Button
+                  variant={showText ? "secondary" : "outline"}
+                  onClick={handleShowText}
+                  className=""
+                >
+                  T
+                </Button> */}
+                {/* SMALL */}
+                <Button
+                  variant={showText ? "secondary" : "outline"}
+                  onClick={handleShowText}
+                  size="icon"
+                  className=""
+                >
+                  T
+                </Button>
+                <Button variant="outline" size="icon">
+                  <ToggleGridColsButton
+                    layouts={layouts}
+                    layoutIndex={layoutIndex}
+                    setLayoutIndex={setLayoutIndex}
+                  />
+                </Button>
               </div>
             </div>
+            {showFilters && (
+              <div className="bg-background gap-1 flex flex-wrap w-full">
+                {/* CATEGORY */}
+                <Button
+                  className="font-display"
+                  variant={showCategory ? "secondary" : "outline"}
+                  onClick={() => setShowCategory((v) => !v)}
+                >
+                  Category
+                </Button>
+                {showCategory && (
+                  <div className="flex gap-1 flex-wrap col-span-2">
+                    <Button
+                      className="font-display"
+                      variant={
+                        filters.category === undefined ? "secondary" : "outline"
+                      }
+                      onClick={() => setCategory(undefined)}
+                    >
+                      All
+                    </Button>
+
+                    {categories.map((cat) => (
+                      <Button
+                        className="font-display"
+                        key={cat.id}
+                        variant={
+                          filters.category === cat.id ? "secondary" : "outline"
+                        }
+                        onClick={() => setCategory(cat.id)} // use ID now
+                      >
+                        {cat.name}
+                      </Button>
+                    ))}
+                  </div>
+                )}
+                <Button
+                  className="font-display"
+                  variant={showCategory ? "secondary" : "outline"}
+                  onClick={() => setShowTags((v) => !v)}
+                >
+                  Tags
+                </Button>
+                {showTags && (
+                  <div className="flex gap-1 flex-wrap col-span-1">
+                    {tags.map((tag) => (
+                      <Button
+                        key={tag.id}
+                        variant={
+                          filters.tag === tag.id ? "secondary" : "outline"
+                        }
+                        onClick={() => setTag(tag.id)} // use ID now
+                      >
+                        #{tag.name}
+                      </Button>
+                    ))}
+                  </div>
+                )}
+                <Button
+                  className="font-display"
+                  variant={showSort ? "secondary" : "outline"}
+                  onClick={() => setShowSort((v) => !v)}
+                >
+                  Sort By
+                </Button>
+                {/* SORT */}
+                {showSort && (
+                  <div className="flex gap-1 col-span-1">
+                    <Button
+                      variant={sortBy === "latest" ? "secondary" : "outline"}
+                      onClick={() => setSortBy("latest")}
+                    >
+                      Latest
+                    </Button>
+
+                    <Button
+                      variant={sortBy === "price-asc" ? "secondary" : "outline"}
+                      onClick={() => setSortBy("price-asc")}
+                      className="font-display"
+                    >
+                      Price (low to high)
+                    </Button>
+                    <Button
+                      variant={
+                        sortBy === "price-desc" ? "secondary" : "outline"
+                      }
+                      onClick={() => setSortBy("price-desc")}
+                      className="font-display"
+                    >
+                      Price (high to low)
+                    </Button>
+                  </div>
+                )}
+                <Button onClick={clearFilters} variant="outline">
+                  Reset Filters
+                </Button>
+              </div>
+            )}
           </div>
+
           <motion.div
             key={`${currentSite}-${layoutIndex}`}
             variants={containerVariants}
@@ -176,22 +407,22 @@ export default function ProductsGrid({}: {}) {
             animate="visible"
             className={` grid  ${
               layouts[layoutIndex]
-            } gap-x-1.5 gap-y-1.5 relative  pb-1 px-1 ${
+            } gap-x-1.5 gap-y-1.5 relative pb-1 px-1 ${
               currentSite === "sale" ? "bg-background" : "bg-background"
-            }  `}
+            }`}
           >
-            {products.map((product) => (
+            {sortedProducts.map((product) => (
               <Fragment key={product.id}>
-                <motion.div
-                  layout
-                  layoutId={`product-${product.id}`} // Ensure product.id is always a number
-                  onClick={() => setActiveProduct(Number(product.id))}
-                >
+                <motion.div layout layoutId={`product-${product.id}`}>
                   <ProductCard
                     showText={showText}
                     setShowText={setShowText}
-                    key={product.id}
                     product={product}
+                    activeProduct={activeProduct}
+                    handleToggleActiveProduct={(id) =>
+                      handleToggleActiveProduct(id as number)
+                    }
+                    openModal={openModal}
                   />
                 </motion.div>
 
@@ -201,12 +432,13 @@ export default function ProductsGrid({}: {}) {
                     product={product}
                     mode="view"
                     onClose={() => setActiveProduct(null)}
+                    handleToggleActiveProduct={(id) =>
+                      handleToggleActiveProduct(id as number)
+                    }
                   />
                 )}
               </Fragment>
             ))}
-
-            {/* <div className="absolute left-1/2 top-0 h-full w-px bg-foreground transform -translate-x-1/2 z-0" /> */}
           </motion.div>
         </div>
       </LayoutGroup>
