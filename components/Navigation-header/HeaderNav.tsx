@@ -127,7 +127,7 @@ export default function HeaderNav() {
       router.replace(newUrl.pathname + newUrl.search, { scroll: false });
     }
   }, [searchParams, router]);
-  const isAccent = open;
+
   const progress = useMotionValue(0);
 
   function toggleOpenMenu() {
@@ -155,9 +155,9 @@ export default function HeaderNav() {
       <header
         className={`
     absolute z-40 top-0 left-0 right-0  flex justify-between w-full items-start   pr-1  h-11 pt-1  
-    ${isAccent ? "bg-accent" : "bg-background"}
+   
     ${isAdminPage ? "pl-1 lg:pl-10 " : "pl-1 "}
-    ${isAdminPage && open ? "pl-3 lg:pl-10  " : "pl-1"}
+    ${isAdminPage ? "pl-3 lg:pl-10  " : "pl-1"}
   `}
       >
         <span className="flex items-start justify-start space-x-1">

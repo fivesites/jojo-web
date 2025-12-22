@@ -4,19 +4,23 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { optimizeCloudinaryImage } from "@/utils/cloudinary";
-import { HeartIcon, HeartFilledIcon, Share2Icon } from "@radix-ui/react-icons";
+import {
+  HeartIcon,
+  HeartFilledIcon,
+  Share2Icon,
+  Cross1Icon,
+} from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import { useProducts } from "@/context/ProductContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
-import ProductForm from "../ProductForm";
 import { useEffect, useState } from "react";
-import { Cross1Icon } from "@radix-ui/react-icons";
-import { Badge } from "../ui/badge";
+import ProductForm from "@/components/ProductForm";
 
 interface ProductModalProps {
   id: string;
-  mode?: "view" | "edit";
+  mode?: "view" | "edit" | null;
 }
 
 export default function ProductModalClient({
@@ -24,7 +28,7 @@ export default function ProductModalClient({
   mode = "view",
 }: ProductModalProps) {
   const router = useRouter();
-  const { products, updateProduct } = useProducts();
+  const { products } = useProducts();
   const {
     isInWishlist,
     addItem: addToWishlist,
@@ -37,29 +41,33 @@ export default function ProductModalClient({
   const isWished = isInWishlist(productId);
   const inCart = isInCart(productId);
 
-  // Hooks are always called
-  const [title, setTitle] = useState(product?.title ?? "");
-  const [price, setPrice] = useState(product?.price ?? 0);
-  const [description, setDescription] = useState(product?.description ?? "");
-  const [imgUrl, setImgUrl] = useState(product?.img_url ?? "");
   const [addedToCart, setAddedToCart] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(product?.img_url || "");
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && router.back();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [router]);
+
+  if (!product) return <div className="fixed inset-0 z-40 bg-background/50" />;
+
+  const images = Array(4).fill(product.img_url); // repeat main image 4x
 
   const toggleWishlist = () => {
-    if (!product || !productId) return;
-    if (isWished) {
-      removeFromWishlist(productId);
-    } else {
+    if (!product) return;
+    if (isWished) removeFromWishlist(productId);
+    else
       addToWishlist({
         productId,
         name: product.title || "Product",
         price: product.price || 0,
         image: product.img_url || "",
       });
-    }
   };
 
   const handleAddToCart = () => {
-    if (!product || !productId) return;
+    if (!product) return;
     addToCart({
       productId,
       name: product.title || "Product",
@@ -71,34 +79,7 @@ export default function ProductModalClient({
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
-  // inside ProductModalClient
-  const images = Array(4).fill(product?.img_url); // repeat the main image 4 times
-  const [selectedImage, setSelectedImage] = useState(product?.img_url ?? "");
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && router.back();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [router]);
-
-  const closeModal = () => {
-    router.back(); // just go back to parent route
-  };
-
-  // Guard in JSX only
-  if (!product) {
-    return <div className="fixed inset-0 z-40 bg-background/50" />;
-  }
-
-  const imageOptimized = imgUrl
-    ? optimizeCloudinaryImage(imgUrl, {
-        width: 800,
-        height: 1066,
-        quality: "auto",
-        crop: "fill",
-        gravity: "auto",
-      })
-    : null;
+  const closeModal = () => router.back();
 
   return (
     <motion.div
@@ -106,251 +87,227 @@ export default function ProductModalClient({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 100 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-40 overflow-y-auto bg-background/80 min-h-screen w-full flex justify-start items-start "
+      className="fixed inset-0 z-40 overflow-y-auto bg-background flex flex-col items-start justify-start "
     >
       {/* HEADER */}
-      <div className="fixed top-0 z-50 left-0 w-[calc(100vw-2rem)] lg:w-[35vw] flex items-center justify-between bg-transparent lg:bg-transparent pl-1 py-1  h-10  ">
+      <div className="fixed top-0 z-50 left-0 w-full flex items-center justify-between p-4">
         <Button
           variant="secondary"
+          className="bg-transparent text-secondary border-transparent"
           size="icon"
-          className="
-         bg-transparent border-transparent text-secondary  
-        "
           onClick={closeModal}
         >
           <Cross1Icon />
         </Button>
-        <span className="flex items-baseline space-x-0 font-mono text-xs pr-1 text-secondary ">
-          <Badge className="text-xs pt-1  " variant="ghost">
-            {product?.category?.name}
+        <span className="hidden lg:flex items-baseline space-x-1 text-xs text-secondary font-display  ">
+          <Badge className="font-display uppercase" variant="ghost">
+            {product.category?.name}
           </Badge>
-          /{" "}
-          <Badge className="text-xs pt-1 d" variant="ghost">
-            {product?.title}
+          /
+          <Badge className="font-display uppercase" variant="ghost">
+            {product.title}
           </Badge>
         </span>
       </div>
-      <div className="relative w-[calc(100vw-2rem)] lg:w-[70vw] h-screen overflow-y-auto bg-background shadow-xl flex flex-row items-start justify-start pt-2  px-1 pb-1">
-        {mode === "edit" ? (
-          <ProductForm
-            mode="edit"
-            initialProduct={product}
-            closeModal={closeModal}
-          />
-        ) : (
-          <div className=" flex flex-col lg:flex-row items-start justify-start w-full h-full  gap-x-1 gap-y-1    pb-1 pt-[10vh] lg:pt-[20vh] lg:overflow-hidden ">
-            {/* TEXT BOX */}
-            <span className="grid grid-cols-2 w-full lg:w-1/2 pr-1 h-screen ">
-              <div className=" flex lg:hidden flex-col justify-start items-start   w-full col-span-2 pb-1     ">
-                <div className="  flex flex-row items-center justify-between w-full ">
-                  <div className="flex flex-col justify-center items-start w-full">
-                    <div className="flex justify-between items-baseline w-full">
-                      <h1 className="text-2xl font-display text-secondary">
-                        {product.title}
-                      </h1>
-                      <span className="flex items-center justify-end space-x-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={toggleWishlist}
-                        >
-                          {isWished ? (
-                            <HeartFilledIcon className="text-secondary" />
-                          ) : (
-                            <HeartIcon />
-                          )}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="block lg:hidden"
-                        >
-                          <Share2Icon />
-                        </Button>
-                      </span>
-                    </div>
-                    <h2 className="text-sm font-mono mb-2">
-                      {product.price} SEK
-                    </h2>
-                  </div>
-                </div>
 
-                <Button
-                  className="w-full  "
-                  size="default"
-                  onClick={handleAddToCart}
-                  disabled={!product?.in_stock}
-                >
-                  {addedToCart
-                    ? "Added to cart!"
-                    : product?.in_stock
-                    ? "Add to cart"
-                    : "Out of stock"}
-                </Button>
+      {mode === "edit" ? (
+        <ProductForm
+          mode="edit"
+          initialProduct={product}
+          closeModal={closeModal}
+        />
+      ) : (
+        <>
+          <div className="grid grid-cols-6 w-full gap-4  h-[calc(100vh-0rem)] lg:h-[calc(100vh-0rem)]  px-2 pt-0 pb-2  ">
+            {/* HERO IMAGE */}
+            <div className="col-start-2 col-span-4 lg:col-start-3 lg:col-span-2 relative w-full h-full   flex items-center justify-center pb-4  ">
+              <div className=" relative h-[50vh] lg:h-[calc(100vh-1.5rem)] aspect-3/4 ">
+                <Image
+                  src={optimizeCloudinaryImage(selectedImage || "", {
+                    width: 1200,
+                    height: 1600,
+                    quality: "auto",
+                    crop: "fill",
+                    gravity: "auto",
+                  })}
+                  alt={"Product image"}
+                  fill
+                  className="object-cover "
+                />
               </div>
-              {/* IMAGES  */}
-              <div
-                className="
-    relative
-    flex flex-col
-    items-start justify-start
-    w-full
-     overflow-y-auto
-  overscroll-contain
-  touch-pan-y
-    gap-y-1
-    col-span-2
-  min-h-screen
-    lg:absolute lg:right-0 lg:top-0 lg:w-1/2 lg:h-auto
-  "
-              >
-                {/* MAIN IMAGE */}
-                <div className="relative w-full aspect-3/4 h-auto ">
-                  {selectedImage ? (
-                    <Image
-                      src={optimizeCloudinaryImage(selectedImage, {
-                        width: 800,
-                        height: 1066,
-                        quality: "auto",
-                        crop: "fill",
-                        gravity: "auto",
-                      })}
-                      alt={title || "Product image"}
-                      fill
-                      className="object-cover object-top w-full"
-                      priority
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-sm opacity-40">
-                      NO IMAGE
-                    </div>
-                  )}
-                </div>
+            </div>
 
-                {/* THUMBNAILS */}
-                <div
-                  className="  flex flex-row  lg:flex-col
-      
-      gap-x-1            lg:gap-y-1
-      overflow-x-auto
-      w-full
-      lg:overflow-y-auto
-      lg:max-h-[40vh]
-      overscroll-contain
-      touch-pan-x
-      lg:touch-pan-y
+            {/* TEXT BOX MOBILE */}
+            <div className="col-start-1 col-span-6 flex lg:hidden flex-col w-full px-0 pb-2 space-y-2 ">
+              <div className="px-2 col-start-1 col-span-1 flex flex-col items-start justify-start  ">
+                <h1 className="text-2xl font-display text-secondary mb-2">
+                  {product.title}
+                </h1>
 
-       "
-                >
-                  {images.map((img, idx) => (
-                    <div
-                      key={idx}
-                      className={`relative h-24 aspect-square cursor-pointer border lg:h-full lg:aspect-3/4 lg:min-h-[80vh] ${
-                        selectedImage === img
-                          ? "border-secondary"
-                          : "border-transparent"
-                      }`}
-                      onClick={() => setSelectedImage(img)}
-                    >
-                      <Image
-                        src={optimizeCloudinaryImage(img, {
-                          width: 80,
-                          height: 80,
-                          quality: "auto",
-                          crop: "fill",
-                          gravity: "auto",
-                        })}
-                        alt={`Thumbnail ${idx}`}
-                        fill
-                        className="object-cover object-center"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {/* DESCRIPTION */}
-              <div className="flex flex-col justify-center items-start w-full  space-y-1 border-t border-secondary p-1 h-[50vh] lg:h-auto col-span-2 lg:justify-start  lg:border-none ">
-                <div className="flex justify-between items-baseline w-full">
-                  <h1 className="text-2xl font-display text-secondary">
-                    {product.title}
-                  </h1>
-                  <span className="flex items-center justify-end space-x-1">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={toggleWishlist}
-                    >
-                      {isWished ? (
-                        <HeartFilledIcon className="text-secondary" />
-                      ) : (
-                        <HeartIcon />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="block lg:hidden"
-                    >
-                      <Share2Icon />
-                    </Button>
+                <p className="text-sm leading-snug text-secondary pb-4 font-extended font-light  max-w-sm">
+                  Cropped, loose fitting, parka featuring seven pockets and
+                  multi-function hood design. OTTO 958 rubber injected velcro
+                  patch for multiple placement options. Iridescent "O" motif in
+                  custom eight point pattern on back side. Custom overspray
+                  "netting" motif on various locations. Made from 100% Bawełna
+                  Cotton Ripstop.
+                </p>
+                <div className="flex flex-col items-start justify-start text-xs py-2 border-t border-t-secondary border-b border-b-secondary w-full mb-4">
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Brand/Designer:{" "}
+                    <strong className="font-normal">{product.designer}</strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Size:{" "}
+                    <strong className="font-normal">
+                      {product.size?.name}
+                    </strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Measurements:
+                    <strong className="font-normal">-</strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-1  font-mono font-bold text-secondary uppercase w-full">
+                    Price:{" "}
+                    <strong className="font-normal">{product.price}</strong>
                   </span>
                 </div>
-                <div className="flex items-baseline justify-center space-x-1 font-mono mb-2">
-                  <h2 className="text-sm font-mono text-secondary ">
-                    {product.price} SEK
-                  </h2>
-                  <Button className="" size="icon" variant="link">
-                    {product.size?.name}
+                <div className="flex items-center justify-start space-x-2 w-full">
+                  <Button
+                    variant="secondary"
+                    onClick={handleAddToCart}
+                    disabled={!product.in_stock}
+                    className="max-w-[90%] w-full"
+                  >
+                    {addedToCart
+                      ? "Added to cart!"
+                      : product.in_stock
+                      ? "Add to cart"
+                      : "Out of stock"}
+                  </Button>
+                  <Button
+                    size="default"
+                    variant={isWished ? "secondary" : "outline"}
+                    className="aspect-square p-1"
+                    onClick={toggleWishlist}
+                  >
+                    <HeartFilledIcon className=" w-4 h-4" />
                   </Button>
                 </div>
-                <p className="font-serif-book text-sm text-secondary mb-4">
-                  {product.description}
-                </p>
-                <Button
-                  className="w-full  "
-                  variant="secondary"
-                  size="default"
-                  onClick={handleAddToCart}
-                  disabled={!product?.in_stock}
-                >
-                  {addedToCart
-                    ? "Added to cart!"
-                    : product?.in_stock
-                    ? "Add to cart"
-                    : "Out of stock"}
-                </Button>
               </div>
-              {/* LINKS SHIPPING INFO */}
-              <div className="flex flex-row space-x-1 justify-start items-start w-full space-y-1 mt-[10vh] lg:mt-0 border-t border-t-secondary  p-1 lg:col-start-1 lg:col-span-2 lg:flex-col ">
+            </div>
+
+            {/* TEXT BOX DESKTOP */}
+            <div className="hidden lg:grid relative lg:absolute top-0 left-0 w-full h-screen grid-cols-4 items-center justify-center z-50 p-1   ">
+              <div className="px-2 col-start-1 col-span-1 flex flex-col items-start justify-start  ">
+                <h1 className="text-2xl font-display text-secondary mb-2">
+                  {product.title}
+                </h1>
+
+                <p className="text-sm leading-snug text-secondary pb-4 font-extended font-light  max-w-sm">
+                  Cropped, loose fitting, parka featuring seven pockets and
+                  multi-function hood design. OTTO 958 rubber injected velcro
+                  patch for multiple placement options. Iridescent "O" motif in
+                  custom eight point pattern on back side. Custom overspray
+                  "netting" motif on various locations. Made from 100% Bawełna
+                  Cotton Ripstop.
+                </p>
+                <div className="flex flex-col items-start justify-start text-xs py-1 border-t border-t-secondary border-b border-b-secondary w-full mb-4">
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Brand/Designer:{" "}
+                    <strong className="font-normal">{product.designer}</strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Size:{" "}
+                    <strong className="font-normal">
+                      {product.size?.name}
+                    </strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-2  font-mono font-bold text-secondary uppercase w-full">
+                    Measurements:
+                    <strong className="font-normal">-</strong>
+                  </span>
+                  <span className="flex justify-start items-baseline gap-x-1  font-mono font-bold text-secondary uppercase w-full">
+                    Price:{" "}
+                    <strong className="font-normal">{product.price}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center justify-start space-x-2 py-1 w-full">
+                  <Button
+                    variant="secondary"
+                    onClick={handleAddToCart}
+                    disabled={!product.in_stock}
+                    className="max-w-64 w-full"
+                  >
+                    {addedToCart
+                      ? "Added to cart!"
+                      : product.in_stock
+                      ? "Add to cart"
+                      : "Out of stock"}
+                  </Button>
+                  <Button
+                    size="default"
+                    variant={isWished ? "secondary" : "outline"}
+                    className="aspect-square p-1"
+                    onClick={toggleWishlist}
+                  >
+                    <HeartFilledIcon className=" w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-6 grid-rows-[auto_2fr_1fr] w-full gap-1 lg:h-screen p-4 ">
+            {/* ADDITIONAL IMAGES */}
+            <div className="col-span-6 row-start-2 row-span-2 grid grid-cols-2 lg:grid-cols-6 gap-1 w-full h-full pb-4 ">
+              {images.slice(1).map((img, idx) => (
+                <div
+                  key={idx}
+                  className="relative w-full aspect-3/4 cursor-pointer"
+                  onClick={() => setSelectedImage(img)}
+                >
+                  <Image
+                    src={optimizeCloudinaryImage(img, {
+                      width: 800,
+                      height: 1066,
+                      quality: "auto",
+                      crop: "fill",
+                      gravity: "auto",
+                    })}
+                    alt={`Thumbnail ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* FOOTER */}
+            <div className="col-span-6 row-start-4 grid grid-cols-2 w-full gap-x-1 gap-y-4">
+              <div className="col-span-2 border-t border-secondary flex lg:grid lg:grid-cols-6 gap-2 p-1">
                 <Button
-                  className="font-display w-min"
-                  size="sm"
-                  variant="outline"
+                  variant="link"
+                  className="lg:col-start-1 font-mono text-xs w-min"
                 >
                   Shipping & Returns
                 </Button>
                 <Button
-                  className="font-display w-min"
-                  size="sm"
-                  variant="outline"
+                  variant="link"
+                  className=" lg:col-start-3 font-mono text-xs w-min"
                 >
                   Terms & Conditions
                 </Button>
               </div>
-              {/* RELATED ITEMS */}
-              <div className="flex flex-col justify-start items-start w-full space-y-1 mt-[10vh] lg:mt-0 border-t border-t-secondary  pt-1 px-1 pb-12 lg:col-start-1   ">
-                <h3 className="font-display text-secondary text-base">
-                  Related items
-                </h3>
-                <div className="grid grid-cols-4 gap-x-1 overflow-x-auto w-full">
+
+              <div className="col-span-2 flex flex-col gap-2 overflow-x-auto ">
+                <h4 className="font-display text-xl text-secondary  px-2">
+                  Related Items
+                </h4>
+                <div className="grid grid-cols-4 lg:grid-cols-6 gap-1 w-full">
                   {images.map((img, idx) => (
                     <div
                       key={idx}
-                      className={`relative col-span-1 aspect-square cursor-pointer border ${
-                        selectedImage === img
-                          ? "border-secondary"
-                          : "border-transparent"
-                      }`}
+                      className="relative w-full aspect-square cursor-pointer border border-transparent"
                       onClick={() => setSelectedImage(img)}
                     >
                       <Image
@@ -361,18 +318,18 @@ export default function ProductModalClient({
                           crop: "fill",
                           gravity: "auto",
                         })}
-                        alt={`Thumbnail ${idx}`}
+                        alt={`Related ${idx}`}
                         fill
-                        className="object-cover object-center"
+                        className="object-cover"
                       />
                     </div>
                   ))}
                 </div>
               </div>
-            </span>
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </motion.div>
   );
 }
