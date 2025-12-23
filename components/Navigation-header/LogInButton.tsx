@@ -96,7 +96,7 @@ export default function LogInButton({
         <PersonIcon />
       </Button>
       {dropdownOpen && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-background border border-secondary shadow-lg text-secondary font-extended z-50">
+        <div className="absolute left-0 right-0 top-full mt-1 w-48 bg-background border border-secondary shadow-lg text-secondary font-extended z-50">
           {isAdmin ? (
             <button
               onClick={() => handleNavigation("/admin")}

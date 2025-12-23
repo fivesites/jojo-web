@@ -198,7 +198,7 @@ export default function ProductModalClient({
             </div>
 
             {/* TEXT BOX DESKTOP */}
-            <div className="hidden lg:grid relative lg:absolute top-0 left-0 w-full h-screen grid-cols-4 items-center justify-center z-50 p-1   ">
+            <div className="hidden lg:grid relative lg:absolute top-0 left-0 w-full h-screen grid-cols-4 items-center justify-center z-40 p-1   ">
               <div className="px-2 col-start-1 col-span-1 flex flex-col items-start justify-start  ">
                 <h1 className="text-2xl font-display text-secondary mb-2">
                   {product.title}

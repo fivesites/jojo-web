@@ -154,7 +154,7 @@ export default function HeaderNav() {
     <>
       <header
         className={`
-    absolute z-40 top-0 left-0 right-0  flex justify-between w-full items-start   pr-1  h-11 pt-1  
+    absolute z-40 top-0 left-0 right-0  flex justify-between w-full items-start   pr-2  h-11 pt-1  
    
     ${isAdminPage ? "pl-1 lg:pl-10 " : "pl-1 "}
     ${isAdminPage ? "pl-1 lg:pl-10  " : "pl-1"}
