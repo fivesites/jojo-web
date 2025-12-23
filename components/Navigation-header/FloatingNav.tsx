@@ -47,19 +47,17 @@ export default function FloatingNav({
   const { toggleSite, currentSite } = useSite();
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showNav, setShowNav] = useState(false);
-  const MIN_SCROLL = 150; // minimum scroll before nav can appear
-
   const pathname = usePathname();
 
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
-
   useEffect(() => {
+    if (pathname === "/admin") {
+      return;
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const MIN_SCROLL = 150;
 
-      // Only show nav if page is scrollable enough
       const canScroll =
         document.body.scrollHeight > window.innerHeight + MIN_SCROLL;
 
@@ -70,13 +68,10 @@ export default function FloatingNav({
       }
 
       if (currentScrollY < MIN_SCROLL) {
-        // At top → hide
         setShowNav(false);
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up → show
         setShowNav(true);
       } else {
-        // Scrolling down → hide
         setShowNav(false);
       }
 
@@ -85,7 +80,12 @@ export default function FloatingNav({
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, pathname]);
+
+  // ✅ CONDITIONAL RENDER GOES HERE
+  if (pathname === "/admin") {
+    return null;
+  }
 
   return (
     <>
