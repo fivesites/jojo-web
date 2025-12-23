@@ -6,8 +6,9 @@ import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import MenuOverlay from "./MenuOverlay";
+
 import { AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const headerVariants: Variants = {
   hidden: {},
@@ -47,6 +48,12 @@ export default function FloatingNav({
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showNav, setShowNav] = useState(false);
   const MIN_SCROLL = 150; // minimum scroll before nav can appear
+
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     const handleScroll = () => {
